@@ -255,7 +255,7 @@ void ModulePhysics::CreateScenarioGround()
 
 	// Create a static body in the middle of the screen
 	b2BodyDef body;
-	body.type = b2_staticBody;
+	body.type = b2_kinematicBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	// Add this static body to the World
@@ -271,6 +271,12 @@ void ModulePhysics::CreateScenarioGround()
 
 	// Add the ficture (plus shape) to the static body
 	big_ball->CreateFixture(&fixture);
+
+
+
+
+
+	//CreateRectangle(0, 0, 50, 700);
 }
 
 PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
