@@ -69,7 +69,7 @@ update_status ModuleSceneIntro::Update()
 	// If user presses 1, create a new circle object
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 25));
+		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 20));
 
 		// Add this module (ModuleSceneIntro) as a "listener" interested in collisions with circles.
 		// If Box2D detects a collision with this last generated circle, it will automatically callback the function ModulePhysics::BeginContact()
@@ -207,6 +207,9 @@ update_status ModuleSceneIntro::Update()
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	// Play Audio FX on every collision, regardless of who is colliding
+	//if (bodyB->body)
+
+
 	App->audio->PlayFx(bonus_fx);
 
 	// Do something else. You can also check which bodies are colliding (sensor? ball? player?)

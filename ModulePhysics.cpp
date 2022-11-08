@@ -251,7 +251,9 @@ void ModulePhysics::CreateScenarioGround()
 	// Get coordinates of the screen center and radius
 	int x = SCREEN_WIDTH / 2;
 	int y = SCREEN_HEIGHT / 1.5f;
-	int diameter = SCREEN_WIDTH / 2;
+	int diameter = SCREEN_WIDTH / 6;
+
+	//b2ChainShape
 
 	// Create a static body in the middle of the screen
 	b2BodyDef body;
@@ -268,12 +270,120 @@ void ModulePhysics::CreateScenarioGround()
 	// Create a fixture and associate the circle to it
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
+	fixture.restitution = 1.2f;
+	
 
 	// Add the ficture (plus shape) to the static body
 	big_ball->CreateFixture(&fixture);
 
+	
 
 
+
+
+	//b2BodyDef ground;
+	//ground.type = b2_staticBody;
+	//ground.position.Set(PIXEL_TO_METERS(SCREEN_WIDTH / 2), PIXEL_TO_METERS(0));
+	//
+	//b2Body* groundBody = world->CreateBody(&ground);
+	//b2PolygonShape Ground;
+	//Ground.SetAsBox(PIXEL_TO_METERS(SCREEN_WIDTH), PIXEL_TO_METERS(50));
+	//
+	//b2FixtureDef fixture2;
+	//fixture.shape = &Ground;
+	//fixture.restitution = 0.9f;
+	//
+	//groundBody->CreateFixture(&fixture);
+	//
+	////ground.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+	////Ground.SetAsBox(PIXEL_TO_METERS(50), PIXEL_TO_METERS(SCREEN_HEIGHT / 2));
+	////
+	////fixture.shape = &Ground;
+	////groundBody->CreateFixture(&fixture);
+	//b2BodyDef ground2;
+	//ground2.type = b2_staticBody;
+	//ground2.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+	//
+	//b2Body* groundBody2 = world->CreateBody(&ground2);
+	//b2PolygonShape Ground2;
+	//Ground2.SetAsBox(PIXEL_TO_METERS(30), PIXEL_TO_METERS(SCREEN_HEIGHT));
+	//
+	////b2FixtureDef fixture2;
+	//fixture.shape = &Ground2;
+	//fixture.restitution = 0.9f;
+
+	//groundBody2->CreateFixture(&fixture);
+
+	b2BodyDef ground3;
+	ground3.type = b2_staticBody;
+	ground3.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+	b2Body* groundBody3 = world->CreateBody(&ground3);
+	b2ChainShape Ground3;
+	int wall[104] = {
+			324, 867,
+			324, 808,
+			395, 765,
+			395, 700,
+			361, 655,
+			403, 617,
+			356, 539,
+			356, 479,
+			400, 429,
+			400, 365,
+			365, 345,
+			365, 300,
+			400, 250,
+			425, 250,
+			425, 800,
+			475, 800,
+			475, 250,
+			460, 218,
+			450, 190,
+			430, 170,
+			400, 152,
+			370, 140,
+			320, 130,
+			280, 127,
+			245, 126,
+			190, 130,
+			150, 150,
+			120, 155,
+			95, 170,
+			75, 190,
+			70, 210,
+			67, 247,
+			46, 260,
+			46, 312,
+			86, 345,
+			86, 422,
+			60, 445,
+			60, 510,
+			100, 575,
+			56, 630,
+			85, 675,
+			60, 695,
+			60, 730,
+			100, 760,
+			100, 780,
+			200, 815,
+			200, 867,
+			1, 867,
+			1, 1,
+			510, 1,
+			510, 867,
+			430, 867
+	};
+	b2Vec2 custom[52];
+	for (int i = 0; i < 52; i++)
+	{
+		custom[i].x = PIXEL_TO_METERS(wall[i * 2]);
+		custom[i].y = PIXEL_TO_METERS(wall[i * 2 + 1]);
+		LOG("%d * 2 =  %d, %d",i, i * 2, i * 2 + 1)
+	}
+	Ground3.CreateChain(custom, 52);
+	fixture.shape = &Ground3;
+	fixture.restitution = 0.9f;
+	groundBody3->CreateFixture(&fixture);
 
 
 	//CreateRectangle(0, 0, 50, 700);
