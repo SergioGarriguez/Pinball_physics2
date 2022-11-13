@@ -394,6 +394,11 @@ void ModulePhysics::CreateRevJoint(b2RevoluteJoint* revolution_joint, b2Revolute
 	revolution_joint = (b2RevoluteJoint*)world->CreateJoint(&revoluteJointDef);
 }
 
+void ModulePhysics::CreatePrisJoint(b2PrismaticJoint* prismatic_joint, b2PrismaticJointDef prismaticJointDef)
+{
+	prismatic_joint = (b2PrismaticJoint*)world->CreateJoint(&prismaticJointDef);
+}
+
 PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 {
 	// Create BODY at position x,y

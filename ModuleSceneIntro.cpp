@@ -70,7 +70,7 @@ update_status ModuleSceneIntro::Update()
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		//circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 20));
-		circles.add(App->physics->CreateCircle(460, 700, 20));
+		circles.add(App->physics->CreateCircle(460, 500, 20));
 
 		// Add this module (ModuleSceneIntro) as a "listener" interested in collisions with circles.
 		// If Box2D detects a collision with this last generated circle, it will automatically callback the function ModulePhysics::BeginContact()
@@ -167,9 +167,9 @@ update_status ModuleSceneIntro::Update()
 		// If mouse is over this circle, paint the circle's texture
 		if (c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
 		{
-			//
+			//App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
 		}
-		App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+		
 			
 
 		c = c->next;

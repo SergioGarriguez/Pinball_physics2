@@ -55,6 +55,7 @@ public:
 	void CreateScenarioGround();
 
 	void CreateRevJoint(b2RevoluteJoint* revolution_joint, b2RevoluteJointDef revoluteJointDef);
+	void CreatePrisJoint(b2PrismaticJoint* prismatic_joint, b2PrismaticJointDef prismaticJointDef);
 
 	// Create basic physics objects
 	PhysBody* CreateCircle(int x, int y, int radius);
