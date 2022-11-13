@@ -1,27 +1,27 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModulePlayer.h"
+#include "ModulePlayer2.h"
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
 
 
-ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModulePlayer2::ModulePlayer2(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
 
-ModulePlayer::~ModulePlayer()
+ModulePlayer2::~ModulePlayer2()
 {}
 
 // Load assets
-bool ModulePlayer::Start()
+bool ModulePlayer2::Start()
 {
-	LOG("Loading player");
+	LOG("Loading player2");
 
-	anchor = App->physics->CreateRectangle(365, 775, 20, 20, 0.9, STATIC);
+	anchor = App->physics->CreateRectangle(150, 785, 20, 20, 0.9, STATIC);
 
-	pbody = App->physics->CreateRectangle(297, 785, 80, 20, 0.9, DYNAMIC);
+	pbody = App->physics->CreateRectangle(120, 785, 80, 20, 0.9, DYNAMIC);
 	pbody->body->SetGravityScale(0);
 	//pbody->body->
 	b2RevoluteJointDef revoluteJointDef;
@@ -29,16 +29,17 @@ bool ModulePlayer::Start()
 	revoluteJointDef.bodyB = anchor->body;
 	revoluteJointDef.collideConnected = false;
 
-	revoluteJointDef.localAnchorA.Set(PIXEL_TO_METERS(40), 0);
+	revoluteJointDef.localAnchorA.Set(PIXEL_TO_METERS(-40), 0);
 	revoluteJointDef.localAnchorB.Set(0,0 );
 
 	revoluteJointDef.enableLimit = true;
-	revoluteJointDef.lowerAngle = -65 * DEGTORAD;
-	revoluteJointDef.upperAngle = 5 * DEGTORAD;
+	revoluteJointDef.lowerAngle = -7 * DEGTORAD;
+	revoluteJointDef.upperAngle = 60 * DEGTORAD;
 
 	revoluteJointDef.enableMotor = true;
-	revoluteJointDef.maxMotorTorque = -100;
-	//revoluteJointDef.motorSpeed = 360 * DEGTORAD;
+	revoluteJointDef.maxMotorTorque = 100;
+	revoluteJointDef.motorSpeed = -10;
+	
 
 	App->physics->CreateRevJoint(revolution_joint, revoluteJointDef);
 
@@ -53,7 +54,7 @@ bool ModulePlayer::Start()
 }
 
 // Unload assets
-bool ModulePlayer::CleanUp()
+bool ModulePlayer2::CleanUp()
 {
 	LOG("Unloading player");
 
@@ -61,15 +62,16 @@ bool ModulePlayer::CleanUp()
 }
 
 // Update: draw background
-update_status ModulePlayer::Update()
+update_status ModulePlayer2::Update()
 {
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
 	{
 		// Enable raycast mode
 		
 
-		pbody->body->ApplyTorque(1000, true);
+		pbody->body->ApplyTorque(-1000, true);
 	}
+	
 
 	return UPDATE_CONTINUE;
 }
