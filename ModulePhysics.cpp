@@ -257,7 +257,7 @@ void ModulePhysics::CreateScenarioGround()
 
 	// Create a static body in the middle of the screen
 	b2BodyDef body;
-	body.type = b2_kinematicBody;
+	body.type = b2_staticBody;
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	// Add this static body to the World
@@ -336,8 +336,8 @@ void ModulePhysics::CreateScenarioGround()
 			425, 250,
 			425, 800,
 			475, 800,
-			475, 250,
-			460, 218,
+			475, 240,
+			460, 208,
 			450, 190,
 			430, 170,
 			400, 152,
@@ -389,6 +389,11 @@ void ModulePhysics::CreateScenarioGround()
 	//CreateRectangle(0, 0, 50, 700);
 }
 
+void ModulePhysics::CreateRevJoint(b2RevoluteJoint* revolution_joint, b2RevoluteJointDef revoluteJointDef)
+{
+	revolution_joint = (b2RevoluteJoint*)world->CreateJoint(&revoluteJointDef);
+}
+
 PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 {
 	// Create BODY at position x,y
@@ -421,11 +426,25 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
+
+PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, float Restitution, bodyType type)
 {
 	// Create BODY at position x,y
 	b2BodyDef body;
-	body.type = b2_dynamicBody;
+	if (type == DYNAMIC)
+	{
+		body.type = b2_dynamicBody;
+	}
+	else if (type == KINEMATIC)
+	{
+		body.type = b2_kinematicBody;
+	}
+	else if (type == STATIC)
+	{
+		body.type = b2_staticBody;
+	}
+
+	
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	// Add BODY to the world
@@ -439,6 +458,7 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height)
 	b2FixtureDef fixture;
 	fixture.shape = &box;
 	fixture.density = 1.0f;
+	fixture.restitution = Restitution;
 
 	// Add fixture to the BODY
 	b->CreateFixture(&fixture);

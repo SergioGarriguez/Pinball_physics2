@@ -69,17 +69,35 @@ update_status ModuleSceneIntro::Update()
 	// If user presses 1, create a new circle object
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 20));
+		//circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 20));
+		circles.add(App->physics->CreateCircle(460, 700, 20));
 
 		// Add this module (ModuleSceneIntro) as a "listener" interested in collisions with circles.
 		// If Box2D detects a collision with this last generated circle, it will automatically callback the function ModulePhysics::BeginContact()
 		circles.getLast()->data->listener = this;
+		//circles.getLast()->data->body->SetType(b2_staticBody);
+		//circles.getLast()->data->body->
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_W))
+	{
+		if (circles.getLast() != NULL)
+		{
+			circles.getLast()->data->body->ApplyForceToCenter(b2Vec2(0, -200), true);
+		}
+		
+		
+	}
+	if (App->input->GetKey(SDL_SCANCODE_S))
+	{
+		//circles.getLast()->data->body->ApplyForceToCenter(b2Vec2(0, -200), true);
+		//circles.getLast()->data->body->
 	}
 
 	// If user presses 2, create a new box object
 	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
-		boxes.add(App->physics->CreateRectangle(App->input->GetMouseX(), App->input->GetMouseY(), 100, 50));
+		boxes.add(App->physics->CreateRectangle(App->input->GetMouseX(), App->input->GetMouseY(), 100, 50, 0, DYNAMIC));
 	}
 
 	// If user presses 3, create a new RickHead object
@@ -147,8 +165,12 @@ update_status ModuleSceneIntro::Update()
 		c->data->GetPosition(x, y);
 
 		// If mouse is over this circle, paint the circle's texture
-		if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
-			App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+		if (c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
+		{
+			//
+		}
+		App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+			
 
 		c = c->next;
 	}
@@ -207,7 +229,7 @@ update_status ModuleSceneIntro::Update()
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	// Play Audio FX on every collision, regardless of who is colliding
-	//if (bodyB->body)
+	//if (bodyB->body->GetType() == b2_staticBody)
 
 
 	App->audio->PlayFx(bonus_fx);

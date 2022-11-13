@@ -12,6 +12,12 @@
 #define METERS_TO_PIXELS(m) ((int) floor(PIXELS_PER_METER * m))
 #define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
 
+enum bodyType {
+	DYNAMIC,
+	STATIC,
+	KINEMATIC
+};
+
 // Small class to return to other modules to track position and rotation of physics bodies
 class PhysBody
 {
@@ -48,9 +54,11 @@ public:
 	// Create main ground
 	void CreateScenarioGround();
 
+	void CreateRevJoint(b2RevoluteJoint* revolution_joint, b2RevoluteJointDef revoluteJointDef);
+
 	// Create basic physics objects
 	PhysBody* CreateCircle(int x, int y, int radius);
-	PhysBody* CreateRectangle(int x, int y, int width, int height);
+	PhysBody* CreateRectangle(int x, int y, int width, int height, float Restitution, bodyType type);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size);
 
