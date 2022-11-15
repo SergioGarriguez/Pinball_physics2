@@ -57,8 +57,10 @@ public:
 	void CreateRevJoint(b2RevoluteJoint* revolution_joint, b2RevoluteJointDef revoluteJointDef);
 	void CreatePrisJoint(b2PrismaticJoint* prismatic_joint, b2PrismaticJointDef prismaticJointDef);
 
+	void ChangeGravity(float change);
+
 	// Create basic physics objects
-	PhysBody* CreateCircle(int x, int y, int radius);
+	PhysBody* CreateCircle(int x, int y, int radius, float Restitution, bodyType type);
 	PhysBody* CreateRectangle(int x, int y, int width, int height, float Restitution, bodyType type);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size);
@@ -70,6 +72,8 @@ private:
 
 	// Debug mode
 	bool debug;
+
+	float gravity = 1.0f;
 
 	// Box2D World
 	b2World* world;

@@ -248,71 +248,36 @@ bool ModulePhysics::CleanUp()
 
 void ModulePhysics::CreateScenarioGround()
 {
-	// Get coordinates of the screen center and radius
+	//// Get coordinates of the screen center and radius
 	int x = SCREEN_WIDTH / 2;
 	int y = SCREEN_HEIGHT / 1.5f;
-	int diameter = SCREEN_WIDTH / 6;
-
-	//b2ChainShape
-
-	// Create a static body in the middle of the screen
-	b2BodyDef body;
-	body.type = b2_staticBody;
-	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-
-	// Add this static body to the World
-	b2Body* big_ball = world->CreateBody(&body);
-
-	// Create a big circle shape
-	b2CircleShape shape;
-	shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
-
-	// Create a fixture and associate the circle to it
+	//int diameter = SCREEN_WIDTH / 6;
+	//
+	////b2ChainShape
+	//
+	//// Create a static body in the middle of the screen
+	//b2BodyDef body;
+	//body.type = b2_staticBody;
+	//body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+	//
+	//// Add this static body to the World
+	//b2Body* big_ball = world->CreateBody(&body);
+	//
+	//// Create a big circle shape
+	//b2CircleShape shape;
+	//shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
+	//
+	//// Create a fixture and associate the circle to it
 	b2FixtureDef fixture;
-	fixture.shape = &shape;
-	fixture.restitution = 1.2f;
+	//fixture.shape = &shape;
+	//fixture.restitution = 1.2f;
 	
 
 	// Add the ficture (plus shape) to the static body
-	big_ball->CreateFixture(&fixture);
+	//big_ball->CreateFixture(&fixture);
+
 
 	
-
-
-
-
-	//b2BodyDef ground;
-	//ground.type = b2_staticBody;
-	//ground.position.Set(PIXEL_TO_METERS(SCREEN_WIDTH / 2), PIXEL_TO_METERS(0));
-	//
-	//b2Body* groundBody = world->CreateBody(&ground);
-	//b2PolygonShape Ground;
-	//Ground.SetAsBox(PIXEL_TO_METERS(SCREEN_WIDTH), PIXEL_TO_METERS(50));
-	//
-	//b2FixtureDef fixture2;
-	//fixture.shape = &Ground;
-	//fixture.restitution = 0.9f;
-	//
-	//groundBody->CreateFixture(&fixture);
-	//
-	////ground.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
-	////Ground.SetAsBox(PIXEL_TO_METERS(50), PIXEL_TO_METERS(SCREEN_HEIGHT / 2));
-	////
-	////fixture.shape = &Ground;
-	////groundBody->CreateFixture(&fixture);
-	//b2BodyDef ground2;
-	//ground2.type = b2_staticBody;
-	//ground2.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
-	//
-	//b2Body* groundBody2 = world->CreateBody(&ground2);
-	//b2PolygonShape Ground2;
-	//Ground2.SetAsBox(PIXEL_TO_METERS(30), PIXEL_TO_METERS(SCREEN_HEIGHT));
-	//
-	////b2FixtureDef fixture2;
-	//fixture.shape = &Ground2;
-	//fixture.restitution = 0.9f;
-
-	//groundBody2->CreateFixture(&fixture);
 
 	b2BodyDef ground3;
 	ground3.type = b2_staticBody;
@@ -399,11 +364,28 @@ void ModulePhysics::CreatePrisJoint(b2PrismaticJoint* prismatic_joint, b2Prismat
 	prismatic_joint = (b2PrismaticJoint*)world->CreateJoint(&prismaticJointDef);
 }
 
-PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
+void ModulePhysics::ChangeGravity(float change)
+{
+	gravity += change;
+	world->SetGravity(b2Vec2(GRAVITY_X, -GRAVITY_Y * gravity));
+}
+
+PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, float Restitution, bodyType type)
 {
 	// Create BODY at position x,y
 	b2BodyDef body;
-	body.type = b2_dynamicBody;
+	if (type == DYNAMIC)
+	{
+		body.type = b2_dynamicBody;
+	}
+	else if (type == KINEMATIC)
+	{
+		body.type = b2_kinematicBody;
+	}
+	else if (type == STATIC)
+	{
+		body.type = b2_staticBody;
+	}
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	// Add BODY to the world
@@ -417,6 +399,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius)
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
 	fixture.density = 1.0f;
+	fixture.restitution = Restitution;
 
 	// Add fixture to the BODY
 	b->CreateFixture(&fixture);

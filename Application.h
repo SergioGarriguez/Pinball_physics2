@@ -12,6 +12,7 @@ class ModuleAudio;
 class ModulePlayer;
 class ModulePlayer2;
 class ModulePiston;
+class ModuleBumper;
 class ModuleSceneIntro;
 class ModulePhysics;
 
@@ -26,6 +27,7 @@ public:
 	ModulePlayer* player;
 	ModulePlayer2* player2;
 	ModulePiston* piston;
+	ModuleBumper* bumper;
 	ModuleSceneIntro* scene_intro;
 	ModulePhysics* physics;
 

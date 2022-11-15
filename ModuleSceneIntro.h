@@ -22,6 +22,8 @@ public:
 
 public:
 
+	float Restitution = 0.0f;
+
 	// Lists of physics objects
 	p2List<PhysBody*> circles;
 	p2List<PhysBody*> boxes;
