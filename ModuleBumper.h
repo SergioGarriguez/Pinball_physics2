@@ -25,6 +25,7 @@ public:
 	bool bumper2 = false;
 
 	int score = 0;
+	int prev_score = 0;
 	int max_score = 0;
 
 	b2PrismaticJoint* prismatic_joint;

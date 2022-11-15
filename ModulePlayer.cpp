@@ -36,6 +36,8 @@ bool ModulePlayer::Start()
 	revoluteJointDef.lowerAngle = -65 * DEGTORAD;
 	revoluteJointDef.upperAngle = 5 * DEGTORAD;
 
+	
+
 	revoluteJointDef.enableMotor = true;
 	revoluteJointDef.maxMotorTorque = -100;
 	//revoluteJointDef.motorSpeed = 360 * DEGTORAD;

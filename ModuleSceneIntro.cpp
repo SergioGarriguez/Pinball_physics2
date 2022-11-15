@@ -32,17 +32,10 @@ bool ModuleSceneIntro::Start()
 
 	// Load textures
 	circle = App->textures->Load("pinball/wheel.png"); 
-	box = App->textures->Load("pinball/crate.png");
-	rick = App->textures->Load("pinball/rick_head.png");
+	
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
-	// Create a big red sensor on the bottom of the screen.
-	// This sensor will not make other objects collide with it, but it can tell if it is "colliding" with something else
-	//lower_ground_sensor = App->physics->CreateRectangleSensor(SCREEN_WIDTH / 2, SCREEN_HEIGHT, SCREEN_WIDTH, 50);
-
-	// Add this module (ModuleSceneIntro) as a listener for collisions with the sensor.
-	// In ModulePhysics::PreUpdate(), we iterate over all sensors and (if colliding) we call the function ModuleSceneIntro::OnCollision()
-	//lower_ground_sensor->listener = this;
+	
 
 	return ret;
 }
@@ -67,7 +60,7 @@ update_status ModuleSceneIntro::Update()
 		ray.y = App->input->GetMouseY();
 	}
 
-	// If user presses 1, create a new circle object
+	
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		if (circles.getLast() != NULL)
@@ -81,6 +74,9 @@ update_status ModuleSceneIntro::Update()
 		
 		circles.getLast()->data->listener = this;
 		circles.getLast()->data->body->SetBullet(true);
+		lives = 3;
+
+		LOG("%d lives", lives);
 		
 		
 	}
@@ -89,12 +85,13 @@ update_status ModuleSceneIntro::Update()
 		Restitution -= 0.1;
 		if (circles.getLast() != NULL)
 		{
-			circles.getLast()->data->~PhysBody();
+			//circles.getLast()->data->~PhysBody();
 			App->bumper->SetScore();
 		}
 		circles.add(App->physics->CreateCircle(460, 510, 20, Restitution, DYNAMIC));
 		circles.getLast()->data->listener = this;
 		circles.getLast()->data->body->SetBullet(true);
+		lives = 3;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
 	{
@@ -108,6 +105,7 @@ update_status ModuleSceneIntro::Update()
 		circles.add(App->physics->CreateCircle(460, 510, 20, Restitution, DYNAMIC));
 		circles.getLast()->data->listener = this;
 		circles.getLast()->data->body->SetBullet(true);
+		lives = 3;
 	}
 	if (circles.getLast() != NULL)
 	{
@@ -115,7 +113,19 @@ update_status ModuleSceneIntro::Update()
 		{
 			circles.getLast()->data->body->SetTransform(b2Vec2(PIXEL_TO_METERS(460), PIXEL_TO_METERS(510)), 0);
 			circles.getLast()->data->body->SetLinearVelocity(b2Vec2(0, 0));
-			App->bumper->SetScore();
+
+			lives--;
+			LOG("%d lives", lives);
+
+			if (lives <= 0)
+			{
+				App->bumper->SetScore();
+				LOG("%d lives, you lost", lives);
+				lives = 3;
+				
+			}
+
+			
 		}
 		
 	}
@@ -135,20 +145,19 @@ update_status ModuleSceneIntro::Update()
 		//circles.getLast()->data->body->
 	}
 
-	// If user presses 2, create a new box object
+	
 	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
 		App->physics->ChangeGravity(-0.1);
 	}
 
-	// If user presses 3, create a new RickHead object
 	if(App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
 		// 
 		App->physics->ChangeGravity(0.1);
 	}
 
-	// Prepare for raycast ------------------------------------------------------
+	
 	
 	// The target point of the raycast is the mouse current position (will change over game time)
 	iPoint mouse;
@@ -176,41 +185,13 @@ update_status ModuleSceneIntro::Update()
 			//App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
 		}
 		
+		
 			
 
 		c = c->next;
 	}
 
-	// Boxes
-	c = boxes.getFirst();
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-
-		// Always paint boxes texture
-		App->renderer->Blit(box, x, y, NULL, 1.0f, c->data->GetRotation());
-
-		// Are we hitting this box with the raycast?
-		if(ray_on)
-		{
-			// Test raycast over the box, return fraction and normal vector
-			int hit = c->data->RayCast(ray.x, ray.y, mouse.x, mouse.y, normal.x, normal.y);
-			if(hit >= 0)
-				ray_hit = hit;
-		}
-		c = c->next;
-	}
-
-	// Rick Heads
-	c = ricks.getFirst();
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(rick, x, y, NULL, 1.0f, c->data->GetRotation());
-		c = c->next;
-	}
+	
 
 	// Raycasts -----------------
 	if(ray_on == true)
@@ -238,7 +219,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	//if (bodyB->body->GetType() == b2_staticBody)
 
 
-	App->audio->PlayFx(bonus_fx);
+	//App->audio->PlayFx(bonus_fx);
 
 	// Do something else. You can also check which bodies are colliding (sensor? ball? player?)
 }

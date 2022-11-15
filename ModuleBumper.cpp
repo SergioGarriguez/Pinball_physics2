@@ -95,8 +95,9 @@ void ModuleBumper::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		bumper1 = false;
 		bumper2 = false;
 	}
-	LOG("max %d", max_score);
-	LOG("now %d", score);
+	LOG("prev score: %d", prev_score);
+	LOG("max score: %d", max_score);
+	LOG("now score: %d", score);
 
 	
 	
@@ -106,6 +107,7 @@ void ModuleBumper::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 void ModuleBumper::SetScore()
 {
+	prev_score = score;
 	if (score > max_score)
 	{
 		max_score = score;
