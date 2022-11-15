@@ -2,9 +2,9 @@
 #include "Application.h"
 #include "ModulePlayer.h"
 #include "ModuleInput.h"
-#include "ModuleRender.h"
-#include "ModuleTextures.h"
 #include "ModuleAudio.h"
+
+
 
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -18,6 +18,8 @@ ModulePlayer::~ModulePlayer()
 bool ModulePlayer::Start()
 {
 	LOG("Loading player");
+
+	flipper = App->textures->Load("pinball/flipper.png");
 
 	anchor = App->physics->CreateRectangle(365, 775, 20, 20, 0.9, STATIC);
 
@@ -46,7 +48,7 @@ bool ModulePlayer::Start()
 
 	//revolution_joint = (b2RevoluteJoint*)world->CreateJoint(&revoluteJointDef);
 	
-
+	
 
 	pbody->listener = this;
 	return true;
@@ -68,10 +70,13 @@ update_status ModulePlayer::Update()
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
 	{
 		// Enable raycast mode
-		
+		LOG("fsafjklñ  %d", METERS_TO_PIXELS(pbody->body->GetTransform().p.x));
 
 		pbody->body->ApplyTorque(1000, true);
 	}
+	App->renderer->Blit(flipper, METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 40, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, NULL, 1.0f, pbody->GetRotation());
+
+	//> data->GetRotation()
 
 	return UPDATE_CONTINUE;
 }

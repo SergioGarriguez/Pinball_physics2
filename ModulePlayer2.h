@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "p2Point.h"
 #include "ModulePhysics.h"
+#include "ModuleRender.h"
+#include "ModuleTextures.h"
 
 class ModulePlayer2 : public Module
 {
@@ -15,6 +17,9 @@ public:
 	bool CleanUp();
 
 public:
+
+	SDL_Texture* flipper;
+
 	PhysBody* pbody;
 	PhysBody* anchor;
 

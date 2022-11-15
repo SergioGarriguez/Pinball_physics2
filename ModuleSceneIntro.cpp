@@ -12,7 +12,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 {
 
 	// Initialise all the internal class variables, at least to NULL pointer
-	circle = box = rick = NULL;
+	circle = box = NULL;
 	ray_on = false;
 	sensed = false;
 }
@@ -31,7 +31,8 @@ bool ModuleSceneIntro::Start()
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	// Load textures
-	circle = App->textures->Load("pinball/wheel.png"); 
+	circle = App->textures->Load("pinball/ball.png"); 
+	background = App->textures->Load("pinball/background.png");
 	
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 
@@ -79,6 +80,17 @@ update_status ModuleSceneIntro::Update()
 		LOG("%d lives", lives);
 		
 		
+	}
+	if (App->input->GetKey(SDL_SCANCODE_6) == KEY_REPEAT)
+	{
+		
+		//circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 20));
+		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 3, Restitution, DYNAMIC));
+
+
+		circles.getLast()->data->listener = this;
+		circles.getLast()->data->body->SetBullet(true);
+
 	}
 	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN)
 	{
@@ -174,6 +186,7 @@ update_status ModuleSceneIntro::Update()
 
 	// Circles
 	p2List_item<PhysBody*>* c = circles.getFirst();
+	App->renderer->Blit(background, 0, 0, NULL, 1.0f, 0);
 	while(c != NULL)
 	{
 		int x, y;
@@ -184,6 +197,7 @@ update_status ModuleSceneIntro::Update()
 		{
 			//App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
 		}
+		App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
 		
 		
 			
@@ -191,6 +205,7 @@ update_status ModuleSceneIntro::Update()
 		c = c->next;
 	}
 
+	
 	
 
 	// Raycasts -----------------

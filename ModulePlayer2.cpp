@@ -19,6 +19,8 @@ bool ModulePlayer2::Start()
 {
 	LOG("Loading player2");
 
+	flipper = App->textures->Load("pinball/flipper2.png");
+
 	anchor = App->physics->CreateRectangle(150, 785, 20, 20, 0.9, STATIC);
 
 	pbody = App->physics->CreateRectangle(120, 785, 80, 20, 0.9, DYNAMIC);
@@ -71,6 +73,7 @@ update_status ModulePlayer2::Update()
 
 		pbody->body->ApplyTorque(-1000, true);
 	}
+	App->renderer->Blit(flipper, METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 40, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, NULL, 1.0f, pbody->GetRotation());
 	
 
 	return UPDATE_CONTINUE;
