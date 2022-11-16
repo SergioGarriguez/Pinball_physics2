@@ -2,8 +2,6 @@
 #include "Application.h"
 #include "ModuleBumper.h"
 #include "ModuleInput.h"
-#include "ModuleRender.h"
-#include "ModuleTextures.h"
 #include "ModuleAudio.h"
 
 
@@ -22,6 +20,8 @@ bool ModuleBumper::Start()
 	pbody = App->physics->CreateCircle(195, 500, 30, 1.2, STATIC);
 
 	pbody->body->SetGravityScale(1);
+
+	heart = App->textures->Load("pinball/heart2.png");
 
 	pbody2 = App->physics->CreateCircle(195, 300, 30, 1.2, STATIC);
 
@@ -66,6 +66,9 @@ update_status ModuleBumper::Update()
 		bumper1 = false;
 		bumper2 = false;
 	}
+
+	App->renderer->Blit(heart, METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 30, 60, 1.0f, pbody->GetRotation());
+	App->renderer->Blit(heart, METERS_TO_PIXELS(pbody2->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody2->body->GetTransform().p.y) - 30, NULL, 1.0f, pbody2->GetRotation());
 	
 
 	return UPDATE_CONTINUE;

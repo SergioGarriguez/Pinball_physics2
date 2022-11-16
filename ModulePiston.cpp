@@ -19,9 +19,9 @@ bool ModulePiston::Start()
 {
 	LOG("Loading player2");
 
-	anchor = App->physics->CreateRectangle(412, 721, 20, 20, 0, STATIC);
+	anchor = App->physics->CreateRectangle(412, 721, 20, 20, 0, STATIC, 1);
 
-	pbody = App->physics->CreateRectangle(445, 750, 30, 30, 0, DYNAMIC);
+	pbody = App->physics->CreateRectangle(445, 750, 30, 30, 0, DYNAMIC, 1);
 
 	b2PrismaticJointDef prismaticJointDef;
 	prismaticJointDef.bodyA = anchor->body;

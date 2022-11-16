@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "p2Point.h"
 #include "ModulePhysics.h"
+#include "ModuleRender.h"
+#include "ModuleTextures.h"
 
 class ModuleBumper : public Module
 {
@@ -20,6 +22,8 @@ public:
 public:
 	PhysBody* pbody;
 	PhysBody* pbody2;
+
+	SDL_Texture* heart;
 
 	bool bumper1 = false;
 	bool bumper2 = false;

@@ -21,9 +21,9 @@ bool ModulePlayer::Start()
 
 	flipper = App->textures->Load("pinball/flipper.png");
 
-	anchor = App->physics->CreateRectangle(365, 775, 20, 20, 0.9, STATIC);
+	anchor = App->physics->CreateRectangle(365, 773, 20, 20, 0.9, STATIC, 1);
 
-	pbody = App->physics->CreateRectangle(297, 785, 80, 20, 0.9, DYNAMIC);
+	pbody = App->physics->CreateRectangle(297, 783, 80, 20, 0.3, DYNAMIC, 1000);
 	pbody->body->SetGravityScale(0);
 	//pbody->body->
 	b2RevoluteJointDef revoluteJointDef;
@@ -35,13 +35,13 @@ bool ModulePlayer::Start()
 	revoluteJointDef.localAnchorB.Set(0,0 );
 
 	revoluteJointDef.enableLimit = true;
-	revoluteJointDef.lowerAngle = -65 * DEGTORAD;
+	revoluteJointDef.lowerAngle = -55 * DEGTORAD;
 	revoluteJointDef.upperAngle = 5 * DEGTORAD;
 
 	
 
 	revoluteJointDef.enableMotor = true;
-	revoluteJointDef.maxMotorTorque = -100;
+	revoluteJointDef.maxMotorTorque = -25000;
 	//revoluteJointDef.motorSpeed = 360 * DEGTORAD;
 
 	App->physics->CreateRevJoint(revolution_joint, revoluteJointDef);
@@ -70,10 +70,13 @@ update_status ModulePlayer::Update()
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
 	{
 		// Enable raycast mode
-		LOG("fsafjklñ  %d", METERS_TO_PIXELS(pbody->body->GetTransform().p.x));
+		
 
-		pbody->body->ApplyTorque(1000, true);
+		pbody->body->ApplyTorque(290000, true);
 	}
+
+	
+
 	App->renderer->Blit(flipper, METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 40, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, NULL, 1.0f, pbody->GetRotation());
 
 	//> data->GetRotation()
