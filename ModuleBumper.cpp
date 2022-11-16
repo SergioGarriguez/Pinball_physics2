@@ -67,9 +67,10 @@ update_status ModuleBumper::Update()
 		bumper2 = false;
 	}
 
-	App->renderer->Blit(heart, METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 30, 60, 1.0f, pbody->GetRotation());
+	App->renderer->Blit(heart, METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 30, NULL, 1.0f, pbody->GetRotation());
 	App->renderer->Blit(heart, METERS_TO_PIXELS(pbody2->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody2->body->GetTransform().p.y) - 30, NULL, 1.0f, pbody2->GetRotation());
 	
+	SDL_Rect()
 
 	return UPDATE_CONTINUE;
 }
