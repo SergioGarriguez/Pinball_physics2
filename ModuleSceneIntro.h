@@ -3,6 +3,7 @@
 #include "p2List.h"
 #include "p2Point.h"
 #include "Globals.h"
+#include "Animation.h"
 
 class PhysBody;
 
@@ -39,6 +40,9 @@ public:
 	SDL_Texture* box;
 	
 	SDL_Texture* background;
+
+	Animation* currentAnimation = nullptr;
+	Animation idleAnim;
 
 	// FX
 	uint bonus_fx;

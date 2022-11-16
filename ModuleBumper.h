@@ -5,6 +5,7 @@
 #include "ModulePhysics.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
+#include "Animation.h"
 
 class ModuleBumper : public Module
 {
@@ -33,6 +34,9 @@ public:
 	int max_score = 0;
 
 	b2PrismaticJoint* prismatic_joint;
+
+	Animation* currentAnimation = nullptr;
+	Animation idleAnim;
 	
 
 };
