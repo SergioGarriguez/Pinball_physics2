@@ -57,7 +57,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	//idleAnim.PushBack({ 120, 200, 40, 40 });
 	//idleAnim.PushBack({ 160, 200, 40, 40 });
 
-	idleAnim.speed = 0.3f;
+	idleAnim.speed = 0.2f;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -355,7 +355,7 @@ float ModuleSceneIntro::GetBallPosX()
 {
 	if (circles.getLast() != NULL)
 	{
-		return circles.getLast()->data->body->GetTransform().p.x;
+		return METERS_TO_PIXELS(circles.getLast()->data->body->GetTransform().p.x);
 	}
 	
 }
@@ -364,7 +364,7 @@ float ModuleSceneIntro::GetBallPosY()
 {
 	if (circles.getLast() != NULL)
 	{
-		return circles.getLast()->data->body->GetTransform().p.y;
+		return METERS_TO_PIXELS(circles.getLast()->data->body->GetTransform().p.y);
 	}
 
 }

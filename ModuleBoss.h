@@ -38,6 +38,7 @@ public:
 	Animation* currentAnimation = nullptr;
 	Animation idleAnim;
 	Animation secondAnim;
+	Animation thirdAnim;
 
 	
 	

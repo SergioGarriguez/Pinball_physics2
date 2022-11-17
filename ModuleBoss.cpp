@@ -3,6 +3,7 @@
 #include "ModuleBoss.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
+#include "ModuleSceneIntro.h"
 
 
 
@@ -19,6 +20,12 @@ ModuleBoss::ModuleBoss(Application* app, bool start_enabled) : Module(app, start
 	
 
 	secondAnim.speed = 0.1f;
+
+	thirdAnim.PushBack({ 0, 80, 40, 40 });
+	thirdAnim.PushBack({ 40, 80, 40, 40 });
+
+
+	thirdAnim.speed = 0.1f;
 
 
 	hits_taken = 0;
@@ -76,21 +83,93 @@ bool ModuleBoss::CleanUp()
 update_status ModuleBoss::Update()
 {
 	
-	if (METERS_TO_PIXELS(pbody->body->GetTransform().p.y) > 850)
+	if (METERS_TO_PIXELS(pbody->body->GetTransform().p.y) > 850 || METERS_TO_PIXELS(pbody->body->GetTransform().p.x) > 440)
 	{
 		pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(250), PIXEL_TO_METERS(500)), 0);
 		
 	}
 
 
-	if (hits_taken > 1 && hits_taken <= 99)
+	if (hits_taken > 1 && hits_taken <= 3)
 	{
 		//pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
 
+		int X = App->scene_intro->GetBallPosX();
+		int Y = App->scene_intro->GetBallPosY();
 
+		if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(5, 5));
+		}
+		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(-5, 5));
+		}
+		else if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(5, -5));
+		}
+		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(-5, -5));
+		}
 		currentAnimation = &secondAnim;
 	}
 
+	else if (hits_taken > 3 && hits_taken <= 6)
+	{
+		//pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
+
+		int X = App->scene_intro->GetBallPosX();
+		int Y = App->scene_intro->GetBallPosY();
+
+		if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(-5, 5));
+		}
+		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(5, -5));
+		}
+		else if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(5, 5));
+		}
+		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(5, -5));
+		}
+	}
+	else if (hits_taken > 6  && hits_taken <= 10)
+	{
+		//pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
+
+		int X = App->scene_intro->GetBallPosX();
+		int Y = App->scene_intro->GetBallPosY();
+
+		if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(8, 5));
+		}
+		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(-8, -5));
+		}
+		else if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(8, 5));
+		}
+		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(-8, -5));
+		}
+	}
+	else if (hits_taken > 10 && hits_taken <= 14)
+	{
+		pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
+		currentAnimation = &thirdAnim;
+
+	}
 
 
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
