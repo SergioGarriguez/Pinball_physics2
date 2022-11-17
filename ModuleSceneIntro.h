@@ -20,6 +20,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+	float GetBallPosX();
+	float GetBallPosY();
 
 public:
 

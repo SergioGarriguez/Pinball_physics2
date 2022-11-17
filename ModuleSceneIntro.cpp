@@ -12,9 +12,52 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 {
 
 	// Initialise all the internal class variables, at least to NULL pointer
-	circle = box = NULL;
+	//circle = box = NULL;
 	ray_on = false;
 	sensed = false;
+
+	idleAnim.PushBack({ 0, 0, 40, 40 });
+	idleAnim.PushBack({ 40, 0, 40, 40 });
+	idleAnim.PushBack({ 80, 0, 40, 40 });
+	idleAnim.PushBack({ 120, 0, 40, 40 });
+	idleAnim.PushBack({ 160, 0, 40, 40 });
+	
+
+	idleAnim.PushBack({ 0, 40, 40, 40 });
+	idleAnim.PushBack({ 40, 40, 40, 40 });
+	idleAnim.PushBack({ 80, 40, 40, 40 });
+	idleAnim.PushBack({ 120, 40, 40, 40 });
+	idleAnim.PushBack({ 160, 40, 40, 40 });
+	
+
+	idleAnim.PushBack({ 0, 80, 40, 40 });
+	idleAnim.PushBack({ 40, 80, 40, 40 });
+	idleAnim.PushBack({ 80, 80, 40, 40 });
+	idleAnim.PushBack({ 120, 80, 40, 40 });
+	idleAnim.PushBack({ 160, 80, 40, 40 });
+	
+
+	idleAnim.PushBack({ 0, 120, 40, 40 });
+	idleAnim.PushBack({ 40, 120, 40, 40 });
+	idleAnim.PushBack({ 80, 120, 40, 40 });
+	idleAnim.PushBack({ 120, 120, 40, 40 });
+	idleAnim.PushBack({ 160, 120, 40, 40 });
+	
+
+	idleAnim.PushBack({ 0, 160, 40, 40 });
+	idleAnim.PushBack({ 40, 160, 40, 40 });
+	idleAnim.PushBack({ 80, 160, 40, 40 });
+	idleAnim.PushBack({ 120, 160, 40, 40 });
+	idleAnim.PushBack({ 160, 160, 40, 40 });
+	
+
+	//idleAnim.PushBack({ 0, 200, 40, 40 });
+	//idleAnim.PushBack({ 40, 200, 40, 40 });
+	//idleAnim.PushBack({ 80, 200, 40, 40 });
+	//idleAnim.PushBack({ 120, 200, 40, 40 });
+	//idleAnim.PushBack({ 160, 200, 40, 40 });
+
+	idleAnim.speed = 0.3f;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -31,10 +74,68 @@ bool ModuleSceneIntro::Start()
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	// Load textures
-	circle = App->textures->Load("pinball/ball.png"); 
+	circle = App->textures->Load("pinball/ball2.png"); 
 	background = App->textures->Load("pinball/background.png");
+	currentAnimation = &idleAnim;
+
 	
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+
+	int wall[104] = {
+			324, 867,
+			324, 808,
+			395, 765,
+			395, 700,
+			361, 655,
+			403, 617,
+			356, 539,
+			356, 479,
+			400, 429,
+			400, 365,
+			365, 345,
+			365, 300,
+			400, 250,
+			425, 250,
+			425, 800,
+			475, 800,
+			475, 240,
+			460, 208,
+			450, 190,
+			430, 170,
+			400, 152,
+			370, 140,
+			320, 130,
+			280, 127,
+			245, 126,
+			190, 130,
+			150, 150,
+			120, 155,
+			95, 170,
+			75, 190,
+			70, 210,
+			67, 247,
+			46, 260,
+			46, 312,
+			86, 345,
+			86, 422,
+			60, 445,
+			60, 510,
+			100, 575,
+			56, 630,
+			85, 675,
+			60, 695,
+			60, 730,
+			100, 760,
+			100, 780,
+			200, 815,
+			200, 867,
+			1, 867,
+			1, 1,
+			510, 1,
+			510, 867,
+			430, 867
+	};
+	App->physics->CreateChain(0, 0, wall, 104, 0.9, STATIC);
 
 	
 
@@ -186,7 +287,11 @@ update_status ModuleSceneIntro::Update()
 
 	// Circles
 	p2List_item<PhysBody*>* c = circles.getFirst();
+
+	
+
 	App->renderer->Blit(background, 0, 0, NULL, 1.0f, 0);
+	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 	while(c != NULL)
 	{
 		int x, y;
@@ -197,14 +302,21 @@ update_status ModuleSceneIntro::Update()
 		{
 			//App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
 		}
-		App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
+		SDL_Rect rect = currentAnimation->GetCurrentFrame();
+
+		App->renderer->Blit(circle, x, y, &rect, 1.0f, c->data->GetRotation());
 		
 		
-			
+		
 
 		c = c->next;
 	}
 
+	
+
+	//if(currentAnimation->GetCurrentFrame() == )
+	//currentAnimation->Reset();
+	currentAnimation->Update();
 	
 	
 
@@ -237,4 +349,22 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	//App->audio->PlayFx(bonus_fx);
 
 	// Do something else. You can also check which bodies are colliding (sensor? ball? player?)
+}
+
+float ModuleSceneIntro::GetBallPosX()
+{
+	if (circles.getLast() != NULL)
+	{
+		return circles.getLast()->data->body->GetTransform().p.x;
+	}
+	
+}
+
+float ModuleSceneIntro::GetBallPosY()
+{
+	if (circles.getLast() != NULL)
+	{
+		return circles.getLast()->data->body->GetTransform().p.y;
+	}
+
 }

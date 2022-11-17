@@ -7,11 +7,11 @@
 #include "ModuleTextures.h"
 #include "Animation.h"
 
-class ModuleBumper : public Module
+class ModuleBoss : public Module
 {
 public:
-	ModuleBumper(Application* app, bool start_enabled = true);
-	virtual ~ModuleBumper();
+	ModuleBoss(Application* app, bool start_enabled = true);
+	virtual ~ModuleBoss();
 
 	bool Start();
 	update_status Update();
@@ -22,26 +22,24 @@ public:
 
 public:
 	PhysBody* pbody;
-	PhysBody* pbody2;
+	
 
 	SDL_Texture* heart;
 
 	bool bumper1 = false;
-	bool bumper2 = false;
 
-	int score = 0;
-	int prev_score = 0;
-	int max_score = 0;
+	int hits_taken = 0;
+	
+
+	
 
 	b2PrismaticJoint* prismatic_joint;
 
 	Animation* currentAnimation = nullptr;
 	Animation idleAnim;
-	Animation beatingAnim;
+	Animation secondAnim;
 
-	Animation* currentAnimation2 = nullptr;
-	Animation idleAnim2;
-	Animation beatingAnim2;
+	
 	
 
 };

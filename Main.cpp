@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "Application.h"
 #include "Globals.h"
+#include <stdlib.h>
+#include <time.h>
 
 #include "SDL/include/SDL.h"
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
@@ -17,6 +19,8 @@ enum main_states
 
 int main(int argc, char ** argv)
 {
+	srand(time(NULL));
+
 	LOG("Starting game '%s'...", TITLE);
 
 	int main_return = EXIT_FAILURE;

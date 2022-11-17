@@ -13,6 +13,7 @@ class ModulePlayer;
 class ModulePlayer2;
 class ModulePiston;
 class ModuleBumper;
+class ModuleBoss;
 class ModuleSceneIntro;
 class ModulePhysics;
 
@@ -28,6 +29,7 @@ public:
 	ModulePlayer2* player2;
 	ModulePiston* piston;
 	ModuleBumper* bumper;
+	ModuleBoss* boss;
 	ModuleSceneIntro* scene_intro;
 	ModulePhysics* physics;
 

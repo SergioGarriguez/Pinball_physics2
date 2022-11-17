@@ -9,6 +9,7 @@
 #include "ModulePlayer2.h"
 #include "ModulePiston.h"
 #include "ModuleBumper.h"
+#include "ModuleBoss.h"
 #include "ModulePhysics.h"
 #include "ModuleSceneIntro.h"
 
@@ -25,6 +26,7 @@ Application::Application()
 	player2 = new ModulePlayer2(this);
 	piston = new ModulePiston(this);
 	bumper = new ModuleBumper(this);
+	boss = new ModuleBoss(this);
 	scene_intro = new ModuleSceneIntro(this);
 	physics = new ModulePhysics(this);
 
@@ -48,6 +50,7 @@ Application::Application()
 	AddModule(player2);
 	AddModule(piston);
 	AddModule(bumper);
+	AddModule(boss);
 }
 
 Application::~Application()

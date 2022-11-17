@@ -281,76 +281,76 @@ void ModulePhysics::CreateScenarioGround()
 
 	
 
-	b2BodyDef ground3;
-	ground3.type = b2_staticBody;
-	ground3.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
-	b2Body* groundBody3 = world->CreateBody(&ground3);
-	b2ChainShape Ground3;
-	int wall[104] = {
-			324, 867,
-			324, 808,
-			395, 765,
-			395, 700,
-			361, 655,
-			403, 617,
-			356, 539,
-			356, 479,
-			400, 429,
-			400, 365,
-			365, 345,
-			365, 300,
-			400, 250,
-			425, 250,
-			425, 800,
-			475, 800,
-			475, 240,
-			460, 208,
-			450, 190,
-			430, 170,
-			400, 152,
-			370, 140,
-			320, 130,
-			280, 127,
-			245, 126,
-			190, 130,
-			150, 150,
-			120, 155,
-			95, 170,
-			75, 190,
-			70, 210,
-			67, 247,
-			46, 260,
-			46, 312,
-			86, 345,
-			86, 422,
-			60, 445,
-			60, 510,
-			100, 575,
-			56, 630,
-			85, 675,
-			60, 695,
-			60, 730,
-			100, 760,
-			100, 780,
-			200, 815,
-			200, 867,
-			1, 867,
-			1, 1,
-			510, 1,
-			510, 867,
-			430, 867
-	};
-	b2Vec2 custom[52];
-	for (int i = 0; i < 52; i++)
-	{
-		custom[i].x = PIXEL_TO_METERS(wall[i * 2]);
-		custom[i].y = PIXEL_TO_METERS(wall[i * 2 + 1]);
-		LOG("%d * 2 =  %d, %d",i, i * 2, i * 2 + 1)
-	}
-	Ground3.CreateChain(custom, 52);
-	fixture.shape = &Ground3;
-	fixture.restitution = 0.9f;
-	groundBody3->CreateFixture(&fixture);
+	//b2BodyDef ground3;
+	//ground3.type = b2_staticBody;
+	//ground3.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+	//b2Body* groundBody3 = world->CreateBody(&ground3);
+	//b2ChainShape Ground3;
+	//int wall[104] = {
+	//		324, 867,
+	//		324, 808,
+	//		395, 765,
+	//		395, 700,
+	//		361, 655,
+	//		403, 617,
+	//		356, 539,
+	//		356, 479,
+	//		400, 429,
+	//		400, 365,
+	//		365, 345,
+	//		365, 300,
+	//		400, 250,
+	//		425, 250,
+	//		425, 800,
+	//		475, 800,
+	//		475, 240,
+	//		460, 208,
+	//		450, 190,
+	//		430, 170,
+	//		400, 152,
+	//		370, 140,
+	//		320, 130,
+	//		280, 127,
+	//		245, 126,
+	//		190, 130,
+	//		150, 150,
+	//		120, 155,
+	//		95, 170,
+	//		75, 190,
+	//		70, 210,
+	//		67, 247,
+	//		46, 260,
+	//		46, 312,
+	//		86, 345,
+	//		86, 422,
+	//		60, 445,
+	//		60, 510,
+	//		100, 575,
+	//		56, 630,
+	//		85, 675,
+	//		60, 695,
+	//		60, 730,
+	//		100, 760,
+	//		100, 780,
+	//		200, 815,
+	//		200, 867,
+	//		1, 867,
+	//		1, 1,
+	//		510, 1,
+	//		510, 867,
+	//		430, 867
+	//};
+	//b2Vec2 custom[52];
+	//for (int i = 0; i < 52; i++)
+	//{
+	//	custom[i].x = PIXEL_TO_METERS(wall[i * 2]);
+	//	custom[i].y = PIXEL_TO_METERS(wall[i * 2 + 1]);
+	//	LOG("%d * 2 =  %d, %d",i, i * 2, i * 2 + 1)
+	//}
+	//Ground3.CreateChain(custom, 52);
+	//fixture.shape = &Ground3;
+	//fixture.restitution = 0.9f;
+	//groundBody3->CreateFixture(&fixture);
 
 
 	//CreateRectangle(0, 0, 50, 700);
@@ -498,11 +498,22 @@ PhysBody* ModulePhysics::CreateRectangleSensor(int x, int y, int width, int heig
 	return pbody;
 }
 
-PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
+PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, float Restitution, bodyType type)
 {
 	// Create BODY at position x,y
 	b2BodyDef body;
-	body.type = b2_dynamicBody;
+	if (type == DYNAMIC)
+	{
+		body.type = b2_dynamicBody;
+	}
+	else if (type == KINEMATIC)
+	{
+		body.type = b2_kinematicBody;
+	}
+	else if (type == STATIC)
+	{
+		body.type = b2_staticBody;
+	}
 	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
 
 	// Add BODY to the world
@@ -521,6 +532,7 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size)
 	// Create FIXTURE
 	b2FixtureDef fixture;
 	fixture.shape = &shape;
+	fixture.restitution = Restitution;
 
 	// Add fixture to the BODY
 	b->CreateFixture(&fixture);
