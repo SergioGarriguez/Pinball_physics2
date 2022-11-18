@@ -202,7 +202,18 @@ update_status ModulePhysics::PostUpdate()
 	}
 
 
+	if (mouse_body != nullptr && mouse_joint != nullptr)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+		{
+			// Tell Box2D to destroy the mouse_joint
+			world->DestroyJoint(mouse_joint);
 
+			// DO NOT FORGET THIS! We need it for the "if (mouse_body != nullptr && mouse_joint != nullptr)"
+			mouse_joint = nullptr;
+			mouse_body = nullptr;
+		}
+	}
 	// TODO 3: If the player keeps pressing the mouse button, update
 	// target position and draw a red line between both anchor points
 	if (mouse_body != nullptr && mouse_joint != nullptr)
@@ -233,6 +244,7 @@ update_status ModulePhysics::PostUpdate()
 			mouse_body = nullptr;
 		}
 	}
+	
 
 	// Keep playing
 	return UPDATE_CONTINUE;

@@ -3,6 +3,7 @@
 #include "ModuleBumper.h"
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
+#include "ModuleBoss.h"
 
 
 
@@ -160,6 +161,20 @@ void ModuleBumper::SetScore()
 	bumper2 = false;
 	currentAnimation = &idleAnim;
 	currentAnimation2 = &idleAnim2;
+	App->boss->Reset();
+}
+
+void ModuleBumper::AddScore(int amount)
+{
+	score += amount;
+	LOG("prev score: %d", prev_score);
+	LOG("max score: %d", max_score);
+	LOG("now score: %d", score);
+}
+
+int ModuleBumper::GetScore()
+{
+	return score;
 }
 
 

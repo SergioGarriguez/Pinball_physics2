@@ -4,6 +4,7 @@
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleBumper.h"
 
 
 
@@ -27,6 +28,17 @@ ModuleBoss::ModuleBoss(Application* app, bool start_enabled) : Module(app, start
 
 	thirdAnim.speed = 0.1f;
 
+	idleAnim2.PushBack({ 0, 0, 80, 80 });
+	idleAnim2.PushBack({ 80, 0, 80, 80 });
+	idleAnim2.PushBack({ 160, 0, 80, 80 });
+	idleAnim2.PushBack({ 240, 0, 80, 80 });
+	idleAnim2.PushBack({ 320, 0, 80, 80 });
+	idleAnim2.PushBack({ 400, 0, 80, 80 });
+	idleAnim2.PushBack({ 480, 0, 80, 80 });
+
+
+	idleAnim2.speed = 0.2f;
+
 
 	hits_taken = 0;
 	
@@ -40,16 +52,15 @@ bool ModuleBoss::Start()
 {
 	LOG("Loading player2");
 
-	pbody = App->physics->CreateCircle(250, 500, 20, 1, DYNAMIC);
-
-	pbody->body->SetGravityScale(0);
-
-	heart = App->textures->Load("pinball/saucer.png");
-	currentAnimation = &idleAnim;
 	
 
-	pbody->body->SetFixedRotation(true);
-	pbody->body->ApplyForceToCenter(b2Vec2(rand()%400 - 200, rand() % 400 - 200), true);
+	saucer = App->textures->Load("pinball/saucer.png");
+	explosion = App->textures->Load("pinball/explosion.png");
+	currentAnimation = &idleAnim;
+	currentAnimation2 = &idleAnim2;
+	
+
+	
 
 	
 
@@ -64,7 +75,7 @@ bool ModuleBoss::Start()
 	
 
 
-	pbody->listener = this;
+	
 	
 	return true;
 
@@ -82,102 +93,164 @@ bool ModuleBoss::CleanUp()
 // Update: draw background
 update_status ModuleBoss::Update()
 {
-	
-	if (METERS_TO_PIXELS(pbody->body->GetTransform().p.y) > 850 || METERS_TO_PIXELS(pbody->body->GetTransform().p.x) > 440)
+	if (destroy)
 	{
-		pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(250), PIXEL_TO_METERS(500)), 0);
+		pbody->~PhysBody();
+		destroy = false;
+	}
+
+	if (!HasSpawned && App->bumper->GetScore() > 500)
+	{
+		pbody = App->physics->CreateCircle(250, 500, 20, 1, DYNAMIC);
+
+		pbody->body->SetGravityScale(0);
+
+		pbody->body->SetFixedRotation(true);
+		pbody->body->ApplyForceToCenter(b2Vec2(rand() % 400 - 200, rand() % 400 - 200), true);
+
+		pbody->listener = this;
+
+		HasSpawned = true;
+		currentAnimation = &idleAnim;
+	}
+
+	
+	if (HasSpawned && !BossBeaten)
+	{
+		if (METERS_TO_PIXELS(pbody->body->GetTransform().p.y) > 850 || METERS_TO_PIXELS(pbody->body->GetTransform().p.x) > 440)
+		{
+			pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(250), PIXEL_TO_METERS(500)), 0);
+
+		}
+
+
+		if (hits_taken > 1 && hits_taken <= 3)
+		{
+			//pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
+
+			int X = App->scene_intro->GetBallPosX();
+			int Y = App->scene_intro->GetBallPosY();
+
+			if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(5, 5));
+			}
+			else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(-5, 5));
+			}
+			else if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(5, -5));
+			}
+			else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(-5, -5));
+			}
+			currentAnimation = &secondAnim;
+		}
+
+		else if (hits_taken > 3 && hits_taken <= 6)
+		{
+			//pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
+
+			int X = App->scene_intro->GetBallPosX();
+			int Y = App->scene_intro->GetBallPosY();
+
+			if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(-5, 5));
+			}
+			else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(5, -5));
+			}
+			else if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(5, 5));
+			}
+			else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(5, -5));
+			}
+		}
+		else if (hits_taken > 6 && hits_taken <= 10)
+		{
+			//pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
+
+			int X = App->scene_intro->GetBallPosX();
+			int Y = App->scene_intro->GetBallPosY();
+
+			if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(8, 5));
+			}
+			else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(-8, -5));
+			}
+			else if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(8, 5));
+			}
+			else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(-8, -5));
+			}
+		}
+		else if (hits_taken > 10 && hits_taken <= 14)
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
+			currentAnimation = &thirdAnim;
+
+
+		}
+		else if (hits_taken > 14)
+		{
+			if (!exploding)
+			{
+				pbody2 = App->physics->CreateCircle(METERS_TO_PIXELS(pbody->body->GetTransform().p.x), METERS_TO_PIXELS(pbody->body->GetTransform().p.y), 40, 2, STATIC);
+
+				exploding = true;
+				
+				
+			}
+			pbody->~PhysBody();
+			App->bumper->AddScore(3000);
+			BossBeaten = true;
+
+			
+		}
+
+
+		SDL_Rect rect = currentAnimation->GetCurrentFrame();
+		
+
+		App->renderer->Blit(saucer, METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 20, &rect, 1.0f, pbody->GetRotation());
+
+		//LOG("%d", currentAnimation->GetCurrentFrame());
+		currentAnimation->Update();
 		
 	}
 
-
-	if (hits_taken > 1 && hits_taken <= 3)
+	if (!has_exploded && exploding)
 	{
-		//pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
+		
+		currentAnimation2->loop = false;
+		LOG("-------->>>>>>> %d", currentAnimation2->HasFinished());
 
-		int X = App->scene_intro->GetBallPosX();
-		int Y = App->scene_intro->GetBallPosY();
-
-		if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
+		SDL_Rect rect2 = currentAnimation2->GetCurrentFrame();
+		App->renderer->Blit(explosion, METERS_TO_PIXELS(pbody2->body->GetTransform().p.x) - 40, METERS_TO_PIXELS(pbody2->body->GetTransform().p.y) - 40, &rect2, 1.0f, pbody2->GetRotation());
+		currentAnimation2->Update();
+		if (currentAnimation2->HasFinished())
 		{
-			pbody->body->SetLinearVelocity(b2Vec2(5, 5));
-		}
-		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(-5, 5));
-		}
-		else if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(5, -5));
-		}
-		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(-5, -5));
-		}
-		currentAnimation = &secondAnim;
-	}
-
-	else if (hits_taken > 3 && hits_taken <= 6)
-	{
-		//pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
-
-		int X = App->scene_intro->GetBallPosX();
-		int Y = App->scene_intro->GetBallPosY();
-
-		if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(-5, 5));
-		}
-		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(5, -5));
-		}
-		else if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(5, 5));
-		}
-		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(5, -5));
+			has_exploded = true;
+			pbody2->~PhysBody();
+			
 		}
 	}
-	else if (hits_taken > 6  && hits_taken <= 10)
-	{
-		//pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
-
-		int X = App->scene_intro->GetBallPosX();
-		int Y = App->scene_intro->GetBallPosY();
-
-		if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(8, 5));
-		}
-		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y < METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(-8, -5));
-		}
-		else if (X < METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(8, 5));
-		}
-		else if (X > METERS_TO_PIXELS(pbody->body->GetTransform().p.x) && Y > METERS_TO_PIXELS(pbody->body->GetTransform().p.y))
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(-8, -5));
-		}
-	}
-	else if (hits_taken > 10 && hits_taken <= 14)
-	{
-		pbody->body->SetLinearVelocity(b2Vec2(rand() % 40 - 20, rand() % 40 - 20));
-		currentAnimation = &thirdAnim;
-
-	}
-
-
-	SDL_Rect rect = currentAnimation->GetCurrentFrame();
-
-	App->renderer->Blit(heart, METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 20, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 20, &rect, 1.0f, pbody->GetRotation());
 	
-	//LOG("%d", currentAnimation->GetCurrentFrame());
-	currentAnimation->Update();
+	
 	
 
 	return UPDATE_CONTINUE;
@@ -195,7 +268,7 @@ void ModuleBoss::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	
 
-	LOG("hits taken: %d", hits_taken);
+	//LOG("hits taken: %d", hits_taken);
 
 	
 	
@@ -203,9 +276,29 @@ void ModuleBoss::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	// Do something else. You can also check which bodies are colliding (sensor? ball? player?)
 }
 
-void ModuleBoss::SetScore()
+void ModuleBoss::Reset()
 {
-	
+
+	if (HasSpawned && !BossBeaten)
+	{
+		//b2FixtureDef fixture;
+		//
+		//pbody->body->DestroyFixture(&fixture);
+		//
+		//pbody->~PhysBody();
+		//
+		//BossBeaten = true;
+		// This WAS A PROBLEM REMEMBER TO ADD IT TO THE README IT CRASHED SO I HAD TO USE THE VARIABLE DESTROY TO CON¡MPENSATE I GESS THAT IT WAS BECAUSE WHEN THE FUCTION RESET IS CALLED IT ACTS BEFORE THIS UPDATE SO IT STILL TRYES TO UPDATE
+		destroy = true;
+	}
+
+	//currentAnimation2->Reset();
+	//currentAnimation2->
+	hits_taken = 0;
+	HasSpawned = false;
+	BossBeaten = false;
+	exploding = false;
+	has_exploded = false;
 	
 }
 

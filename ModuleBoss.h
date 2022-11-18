@@ -17,19 +17,27 @@ public:
 	update_status Update();
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
-	void SetScore();
+	void Reset();
 
 
 public:
 	PhysBody* pbody;
+	PhysBody* pbody2;
+	bool exploding = false;
+	bool has_exploded = false;
 	
 
-	SDL_Texture* heart;
+	SDL_Texture* saucer;
+	SDL_Texture* explosion;
+
 
 	bool bumper1 = false;
 
 	int hits_taken = 0;
-	
+
+	bool HasSpawned = false;
+	bool BossBeaten = false; 
+	bool destroy = false;
 
 	
 
@@ -39,6 +47,11 @@ public:
 	Animation idleAnim;
 	Animation secondAnim;
 	Animation thirdAnim;
+	Animation explosionAnim;
+
+	Animation* currentAnimation2 = nullptr;
+	Animation idleAnim2;
+	Animation beatingAnim2;
 
 	
 	

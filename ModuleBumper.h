@@ -18,6 +18,8 @@ public:
 	bool CleanUp();
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void SetScore();
+	void AddScore(int amount);
+	int GetScore();
 
 
 public:

@@ -198,7 +198,7 @@ update_status ModuleSceneIntro::Update()
 		Restitution -= 0.1;
 		if (circles.getLast() != NULL)
 		{
-			//circles.getLast()->data->~PhysBody();
+			circles.getLast()->data->~PhysBody();
 			App->bumper->SetScore();
 		}
 		circles.add(App->physics->CreateCircle(460, 510, 20, Restitution, DYNAMIC));
