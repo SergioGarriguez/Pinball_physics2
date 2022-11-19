@@ -99,7 +99,7 @@ update_status ModuleBoss::Update()
 		destroy = false;
 	}
 
-	if (!HasSpawned && App->bumper->GetScore() > 500)
+	if (!HasSpawned && App->bumper->GetScore() > 1000)
 	{
 		pbody = App->physics->CreateCircle(250, 500, 20, 1, DYNAMIC);
 
@@ -292,7 +292,7 @@ void ModuleBoss::Reset()
 		destroy = true;
 	}
 
-	//currentAnimation2->Reset();
+	currentAnimation2->Reset();
 	//currentAnimation2->
 	hits_taken = 0;
 	HasSpawned = false;
@@ -302,5 +302,9 @@ void ModuleBoss::Reset()
 	
 }
 
+bool ModuleBoss::IsBeaten()
+{
+	return BossBeaten;
+}
 
 

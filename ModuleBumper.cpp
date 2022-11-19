@@ -4,6 +4,7 @@
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ModuleBoss.h"
+#include "ModuleSceneIntro.h"
 
 
 
@@ -58,8 +59,14 @@ bool ModuleBumper::Start()
 
 	pbody->listener = this;
 	pbody2->listener = this;
-	return true;
 
+
+	char lookupTable[] = { "abcdefghijklmnopqrstuvwxyz0123456789:R =+-&([]|/_)!" };
+	scoreFont = App->fonts->Load("pinball/Font.png", lookupTable, 1);
+
+
+
+	return true;
 
 }
 
@@ -101,6 +108,29 @@ update_status ModuleBumper::Update()
 	//LOG("%d", currentAnimation->GetCurrentFrame());
 	currentAnimation->Update();
 	currentAnimation2->Update();
+
+
+
+	sprintf_s(scoreText, 10, "%7d", score);
+	App->fonts->BlitText(100, 20, scoreFont, scoreText);
+	App->fonts->BlitText(20, 20, scoreFont, "score");
+
+	sprintf_s(scoreText, 10, "%7d", max_score);
+	App->fonts->BlitText(100, 40, scoreFont, scoreText);
+	App->fonts->BlitText(20, 40, scoreFont, "max");
+
+	sprintf_s(scoreText, 10, "%7d", prev_score);
+	App->fonts->BlitText(100, 60, scoreFont, scoreText);
+	App->fonts->BlitText(20, 60, scoreFont, "prev");
+
+	sprintf_s(scoreText, 10, "%7d", App->scene_intro->GetLives());
+	App->fonts->BlitText(100, 90, scoreFont, scoreText);
+	App->fonts->BlitText(20, 90, scoreFont, "lives");
+
+	if (App->boss->IsBeaten())
+	{
+		App->fonts->BlitText(270, 40, scoreFont, "victory");
+	}
 
 	return UPDATE_CONTINUE;
 }

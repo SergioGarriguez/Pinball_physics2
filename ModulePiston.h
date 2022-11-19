@@ -26,6 +26,9 @@ public:
 	Animation* currentAnimation = nullptr;
 	Animation idleAnim;
 	Animation secondAnim;
+	Animation thirdAnim;
+
+	float aux = 22.0f;
 
 	b2PrismaticJoint* prismatic_joint;
 	

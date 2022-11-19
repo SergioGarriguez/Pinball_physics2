@@ -12,11 +12,13 @@
 #include "ModuleBoss.h"
 #include "ModulePhysics.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleFonts.h"
 
 #include "Application.h"
 
 Application::Application()
 {
+	fonts = new ModuleFonts(this);
 	renderer = new ModuleRender(this);
 	window = new ModuleWindow(this);
 	textures = new ModuleTextures(this);
@@ -29,12 +31,14 @@ Application::Application()
 	boss = new ModuleBoss(this);
 	scene_intro = new ModuleSceneIntro(this);
 	physics = new ModulePhysics(this);
+	
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+	AddModule(fonts);
 	AddModule(window);
 	AddModule(physics);
 	AddModule(renderer);
@@ -51,6 +55,8 @@ Application::Application()
 	AddModule(piston);
 	AddModule(bumper);
 	AddModule(boss);
+	
+
 }
 
 Application::~Application()

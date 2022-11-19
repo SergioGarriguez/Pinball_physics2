@@ -56,7 +56,12 @@ ModulePiston::ModulePiston(Application* app, bool start_enabled) : Module(app, s
 	secondAnim.PushBack({ 32, 0, 32, 270 });
 	secondAnim.PushBack({ 0, 0, 32, 270 });
 
-	secondAnim.speed = 1.8f;
+	secondAnim.speed = 1.35f;
+
+	thirdAnim.PushBack({ 0, 270, 32, 270 });
+	thirdAnim.PushBack({ 32, 270, 32, 270 });
+
+	thirdAnim.speed = 0.2f;
 }
 
 ModulePiston::~ModulePiston()
@@ -142,7 +147,11 @@ update_status ModulePiston::Update()
 {
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN)
 	{
+		
+		aux = 22.0f;
+		currentAnimation->loop = false;
 		currentAnimation = &idleAnim;
+		LOG("gggggg %d", currentAnimation->HasFinished());
 		currentAnimation->loop = false;
 		currentAnimation->Reset();
 	}
@@ -151,6 +160,15 @@ update_status ModulePiston::Update()
 		// Enable raycast mode
 		
 		
+		if (currentAnimation->HasFinished())
+		{
+			//currentAnimation->Reset();
+			
+			aux = aux - currentAnimation->WhichIsCurrentFrame() - 1;
+			currentAnimation = &thirdAnim;
+			currentAnimation->loop = true;
+			
+		}
 		pbody->body->ApplyForce(b2Vec2(0, 200), pbody->body->GetWorldCenter(), true);
 
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
@@ -160,11 +178,16 @@ update_status ModulePiston::Update()
 	}
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
 	{
-		float aux = 22.0f;
-		aux = aux - currentAnimation->WhichIsCurrentFrame() - 1;
+		if (currentAnimation->loop == false)
+		{
+			aux = aux - currentAnimation->WhichIsCurrentFrame() - 1;
+		}
 
-		currentAnimation = &secondAnim;
+		
+		
 		currentAnimation->loop = false;
+		currentAnimation = &secondAnim;
+		//currentAnimation->loop = false;
 		currentAnimation->SetCurrentFrame(aux);
 		//currentAnimation->Reset();
 
@@ -177,12 +200,7 @@ update_status ModulePiston::Update()
 		currentAnimation->Update();
 	}
 
-
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-	{
-		//currentAnimation->SetCurrentFrame(10);
-	}
-	LOG("frame: %f", currentAnimation->WhichIsCurrentFrame());
+	//LOG("frame: %f", currentAnimation->WhichIsCurrentFrame());
 
 	//LOG("...................... %d", METERS_TO_PIXELS(pbody->body->GetTransform().p.y));
 	

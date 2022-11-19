@@ -16,6 +16,7 @@ class ModuleBumper;
 class ModuleBoss;
 class ModuleSceneIntro;
 class ModulePhysics;
+class ModuleFonts;
 
 class Application
 {
@@ -32,6 +33,7 @@ public:
 	ModuleBoss* boss;
 	ModuleSceneIntro* scene_intro;
 	ModulePhysics* physics;
+	ModuleFonts* fonts;
 
 private:
 

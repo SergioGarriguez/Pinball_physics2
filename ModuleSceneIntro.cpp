@@ -79,7 +79,7 @@ bool ModuleSceneIntro::Start()
 	currentAnimation = &idleAnim;
 
 	
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	bonus_fx = App->audio->LoadFx("pinball/meat2.wav");
 
 	int wall[104] = {
 			324, 867,
@@ -367,4 +367,9 @@ float ModuleSceneIntro::GetBallPosY()
 		return METERS_TO_PIXELS(circles.getLast()->data->body->GetTransform().p.y);
 	}
 
+}
+
+int ModuleSceneIntro::GetLives()
+{
+	return lives;
 }

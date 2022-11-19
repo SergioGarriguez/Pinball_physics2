@@ -6,6 +6,7 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "Animation.h"
+#include "ModuleFonts.h"
 
 class ModuleBumper : public Module
 {
@@ -44,6 +45,9 @@ public:
 	Animation* currentAnimation2 = nullptr;
 	Animation idleAnim2;
 	Animation beatingAnim2;
+
+	int scoreFont = -1;
+	char scoreText[10] = { "\0" };
 	
 
 };

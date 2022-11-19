@@ -22,6 +22,7 @@ public:
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	float GetBallPosX();
 	float GetBallPosY();
+	int GetLives();
 
 public:
 
