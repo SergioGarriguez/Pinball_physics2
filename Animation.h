@@ -57,6 +57,16 @@ public:
 
 		return frames[actualFrame];
 	}
+
+	float WhichIsCurrentFrame()
+	{
+		return currentFrame;
+	}
+
+	void SetCurrentFrame(float current_frame)
+	{
+		currentFrame = current_frame;
+	}
 };
 
 #endif

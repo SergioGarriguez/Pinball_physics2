@@ -2,7 +2,10 @@
 #include "Module.h"
 #include "Globals.h"
 #include "p2Point.h"
+#include "ModuleRender.h"
+#include "ModuleTextures.h"
 #include "ModulePhysics.h"
+#include "Animation.h"
 
 class ModulePiston : public Module
 {
@@ -18,6 +21,11 @@ public:
 	PhysBody* pbody;
 	PhysBody* anchor;
 
+	SDL_Texture* veins;
+	
+	Animation* currentAnimation = nullptr;
+	Animation idleAnim;
+	Animation secondAnim;
 
 	b2PrismaticJoint* prismatic_joint;
 	

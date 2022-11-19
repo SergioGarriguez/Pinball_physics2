@@ -2,13 +2,61 @@
 #include "Application.h"
 #include "ModulePiston.h"
 #include "ModuleInput.h"
-#include "ModuleRender.h"
-#include "ModuleTextures.h"
 #include "ModuleAudio.h"
 
 
 ModulePiston::ModulePiston(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	idleAnim.PushBack({ 0, 0, 32, 270 });
+	idleAnim.PushBack({ 32, 0, 32, 270 });
+	idleAnim.PushBack({ 64, 0, 32, 270 });
+	idleAnim.PushBack({ 96, 0, 32, 270 });
+	idleAnim.PushBack({ 128, 0, 32, 270 });
+	idleAnim.PushBack({ 160, 0, 32, 270 });
+	idleAnim.PushBack({ 192, 0, 32, 270 });
+	idleAnim.PushBack({ 224, 0, 32, 270 });
+	idleAnim.PushBack({ 256, 0, 32, 270 });
+	idleAnim.PushBack({ 288, 0, 32, 270 });
+	idleAnim.PushBack({ 320, 0, 32, 270 });
+	idleAnim.PushBack({ 352, 0, 32, 270 });
+	idleAnim.PushBack({ 384, 0, 32, 270 });
+	idleAnim.PushBack({ 416, 0, 32, 270 });
+	idleAnim.PushBack({ 448, 0, 32, 270 });
+	idleAnim.PushBack({ 480, 0, 32, 270 });
+	idleAnim.PushBack({ 512, 0, 32, 270 });
+	idleAnim.PushBack({ 544, 0, 32, 270 });
+	idleAnim.PushBack({ 576, 0, 32, 270 });
+	idleAnim.PushBack({ 608, 0, 32, 270 });
+	idleAnim.PushBack({ 640, 0, 32, 270 });
+	idleAnim.PushBack({ 672, 0, 32, 270 });
+	
+	idleAnim.speed = 0.28f;
+
+
+	secondAnim.PushBack({ 672, 0, 32, 270 });
+	secondAnim.PushBack({ 640, 0, 32, 270 });
+	secondAnim.PushBack({ 608, 0, 32, 270 });
+	secondAnim.PushBack({ 576, 0, 32, 270 });
+	secondAnim.PushBack({ 544, 0, 32, 270 });
+	secondAnim.PushBack({ 512, 0, 32, 270 });
+	secondAnim.PushBack({ 480, 0, 32, 270 });
+	secondAnim.PushBack({ 448, 0, 32, 270 });
+	secondAnim.PushBack({ 416, 0, 32, 270 });
+	secondAnim.PushBack({ 384, 0, 32, 270 });
+	secondAnim.PushBack({ 352, 0, 32, 270 });
+	secondAnim.PushBack({ 320, 0, 32, 270 });
+	secondAnim.PushBack({ 288, 0, 32, 270 });
+	secondAnim.PushBack({ 256, 0, 32, 270 });
+	secondAnim.PushBack({ 224, 0, 32, 270 });
+	secondAnim.PushBack({ 192, 0, 32, 270 });
+	secondAnim.PushBack({ 160, 0, 32, 270 });
+	secondAnim.PushBack({ 128, 0, 32, 270 });
+	secondAnim.PushBack({ 96, 0, 32, 270 });
+	secondAnim.PushBack({ 64, 0, 32, 270 });
+	secondAnim.PushBack({ 32, 0, 32, 270 });
+	secondAnim.PushBack({ 0, 0, 32, 270 });
+
+	secondAnim.speed = 1.8f;
 }
 
 ModulePiston::~ModulePiston()
@@ -18,6 +66,10 @@ ModulePiston::~ModulePiston()
 bool ModulePiston::Start()
 {
 	LOG("Loading player2");
+
+	veins = App->textures->Load("pinball/veins.png");
+	currentAnimation = &secondAnim;
+	currentAnimation->loop = false;
 
 	anchor = App->physics->CreateRectangle(412, 721, 20, 20, 0, STATIC, 1);
 
@@ -69,7 +121,7 @@ bool ModulePiston::Start()
 	//revolution_joint = (b2RevoluteJoint*)world->CreateJoint(&revoluteJointDef);
 	
 	
-
+	
 
 	pbody->listener = this;
 	return true;
@@ -88,13 +140,51 @@ bool ModulePiston::CleanUp()
 // Update: draw background
 update_status ModulePiston::Update()
 {
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN)
+	{
+		currentAnimation = &idleAnim;
+		currentAnimation->loop = false;
+		currentAnimation->Reset();
+	}
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
 		// Enable raycast mode
 		
+		
 		pbody->body->ApplyForce(b2Vec2(0, 200), pbody->body->GetWorldCenter(), true);
+
+		SDL_Rect rect = currentAnimation->GetCurrentFrame();
+		App->renderer->Blit(veins, 435, 535, &rect, 1.0f, 0);
+		currentAnimation->Update();
 		//pbody->body->ApplyTorque(-1000, true);
 	}
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP)
+	{
+		float aux = 22.0f;
+		aux = aux - currentAnimation->WhichIsCurrentFrame() - 1;
+
+		currentAnimation = &secondAnim;
+		currentAnimation->loop = false;
+		currentAnimation->SetCurrentFrame(aux);
+		//currentAnimation->Reset();
+
+		
+	}
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT)
+	{
+		SDL_Rect rect = currentAnimation->GetCurrentFrame();
+		App->renderer->Blit(veins, 435, 535, &rect, 1.0f, 0);
+		currentAnimation->Update();
+	}
+
+
+	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	{
+		//currentAnimation->SetCurrentFrame(10);
+	}
+	LOG("frame: %f", currentAnimation->WhichIsCurrentFrame());
+
+	//LOG("...................... %d", METERS_TO_PIXELS(pbody->body->GetTransform().p.y));
 	
 
 	return UPDATE_CONTINUE;

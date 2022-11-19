@@ -237,7 +237,7 @@ update_status ModuleBoss::Update()
 	{
 		
 		currentAnimation2->loop = false;
-		LOG("-------->>>>>>> %d", currentAnimation2->HasFinished());
+		//LOG("-------->>>>>>> %d", currentAnimation2->HasFinished());
 
 		SDL_Rect rect2 = currentAnimation2->GetCurrentFrame();
 		App->renderer->Blit(explosion, METERS_TO_PIXELS(pbody2->body->GetTransform().p.x) - 40, METERS_TO_PIXELS(pbody2->body->GetTransform().p.y) - 40, &rect2, 1.0f, pbody2->GetRotation());
