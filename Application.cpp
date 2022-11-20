@@ -13,6 +13,8 @@
 #include "ModulePhysics.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleFonts.h"
+#include "ModuleSensor.h"
+#include "ModuleMouth.h"
 
 #include "Application.h"
 
@@ -29,6 +31,8 @@ Application::Application()
 	piston = new ModulePiston(this);
 	bumper = new ModuleBumper(this);
 	boss = new ModuleBoss(this);
+	sensor = new ModuleSensor(this);
+	mouth = new ModuleMouth(this);
 	scene_intro = new ModuleSceneIntro(this);
 	physics = new ModulePhysics(this);
 	
@@ -55,6 +59,8 @@ Application::Application()
 	AddModule(piston);
 	AddModule(bumper);
 	AddModule(boss);
+	AddModule(sensor);
+	AddModule(mouth);
 	
 
 }

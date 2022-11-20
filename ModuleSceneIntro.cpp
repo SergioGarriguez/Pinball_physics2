@@ -253,12 +253,14 @@ update_status ModuleSceneIntro::Update()
 			if (METERS_TO_PIXELS(circles.getLast()->data->body->GetTransform().p.y) > 750  && METERS_TO_PIXELS(circles.getLast()->data->body->GetTransform().p.x) < 200)
 			{
 				circles.getLast()->data->body->ApplyForceToCenter(b2Vec2(0, -20), true);
+				
 			}
 			
 		}
 		
 		
 	}
+	
 	
 
 	
@@ -355,6 +357,8 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
 	// Play Audio FX on every collision, regardless of who is colliding
 	//if (bodyB->body->GetType() == b2_staticBody)
+
+	
 
 
 	App->audio->PlayFx(bonus_fx);

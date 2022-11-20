@@ -20,7 +20,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app,
 	ground = NULL;
 	mouse_joint = NULL;
 	mouse_body = NULL;
-	debug = true;
+	debug = false;
 }
 
 // Destructor
@@ -265,107 +265,7 @@ void ModulePhysics::CreateScenarioGround()
 	//// Get coordinates of the screen center and radius
 	int x = SCREEN_WIDTH / 2;
 	int y = SCREEN_HEIGHT / 1.5f;
-	//int diameter = SCREEN_WIDTH / 6;
-	//
-	////b2ChainShape
-	//
-	//// Create a static body in the middle of the screen
-	//b2BodyDef body;
-	//body.type = b2_staticBody;
-	//body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-	//
-	//// Add this static body to the World
-	//b2Body* big_ball = world->CreateBody(&body);
-	//
-	//// Create a big circle shape
-	//b2CircleShape shape;
-	//shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
-	//
-	//// Create a fixture and associate the circle to it
-	b2FixtureDef fixture;
-	//fixture.shape = &shape;
-	//fixture.restitution = 1.2f;
 	
-
-	// Add the ficture (plus shape) to the static body
-	//big_ball->CreateFixture(&fixture);
-
-
-	
-
-	//b2BodyDef ground3;
-	//ground3.type = b2_staticBody;
-	//ground3.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
-	//b2Body* groundBody3 = world->CreateBody(&ground3);
-	//b2ChainShape Ground3;
-	//int wall[104] = {
-	//		324, 867,
-	//		324, 808,
-	//		395, 765,
-	//		395, 700,
-	//		361, 655,
-	//		403, 617,
-	//		356, 539,
-	//		356, 479,
-	//		400, 429,
-	//		400, 365,
-	//		365, 345,
-	//		365, 300,
-	//		400, 250,
-	//		425, 250,
-	//		425, 800,
-	//		475, 800,
-	//		475, 240,
-	//		460, 208,
-	//		450, 190,
-	//		430, 170,
-	//		400, 152,
-	//		370, 140,
-	//		320, 130,
-	//		280, 127,
-	//		245, 126,
-	//		190, 130,
-	//		150, 150,
-	//		120, 155,
-	//		95, 170,
-	//		75, 190,
-	//		70, 210,
-	//		67, 247,
-	//		46, 260,
-	//		46, 312,
-	//		86, 345,
-	//		86, 422,
-	//		60, 445,
-	//		60, 510,
-	//		100, 575,
-	//		56, 630,
-	//		85, 675,
-	//		60, 695,
-	//		60, 730,
-	//		100, 760,
-	//		100, 780,
-	//		200, 815,
-	//		200, 867,
-	//		1, 867,
-	//		1, 1,
-	//		510, 1,
-	//		510, 867,
-	//		430, 867
-	//};
-	//b2Vec2 custom[52];
-	//for (int i = 0; i < 52; i++)
-	//{
-	//	custom[i].x = PIXEL_TO_METERS(wall[i * 2]);
-	//	custom[i].y = PIXEL_TO_METERS(wall[i * 2 + 1]);
-	//	LOG("%d * 2 =  %d, %d",i, i * 2, i * 2 + 1)
-	//}
-	//Ground3.CreateChain(custom, 52);
-	//fixture.shape = &Ground3;
-	//fixture.restitution = 0.9f;
-	//groundBody3->CreateFixture(&fixture);
-
-
-	//CreateRectangle(0, 0, 50, 700);
 }
 
 void ModulePhysics::CreateRevJoint(b2RevoluteJoint* revolution_joint, b2RevoluteJointDef revoluteJointDef)
@@ -429,7 +329,7 @@ PhysBody* ModulePhysics::CreateCircle(int x, int y, int radius, float Restitutio
 }
 
 
-PhysBody* ModulePhysics::CreateRectangle(int x, int y, int width, int height, float Restitution, bodyType type, float Density)
+PhysBody* ModulePhysics::CreateRectangle(int x, int y, float width, int height, float Restitution, bodyType type, float Density)
 {
 	// Create BODY at position x,y
 	b2BodyDef body;
@@ -565,6 +465,57 @@ PhysBody* ModulePhysics::CreateChain(int x, int y, int* points, int size, float 
 // Callback function to collisions with Box2D
 void ModulePhysics::BeginContact(b2Contact* contact)
 {
+	
+	contact->SetEnabled(true);
+
+	b2Fixture* fixtureA = contact->GetFixtureA();
+	b2Fixture* fixtureB = contact->GetFixtureB();
+
+	b2Fixture* platformFixture = NULL;
+	b2Fixture* otherFixture = NULL;
+	
+	if (fixtureA->GetBody()->GetGravityScale() == 42) {
+		platformFixture = fixtureA;
+		otherFixture = fixtureB;
+	}
+	else if (fixtureB->GetBody()->GetGravityScale() == 42) {
+		platformFixture = fixtureB;
+		otherFixture = fixtureA;
+	}
+
+	if (platformFixture)
+	{
+		b2Body* platformBody = platformFixture->GetBody();
+		b2Body* otherBody = otherFixture->GetBody();
+
+		int numPoints = contact->GetManifold()->pointCount;
+		b2WorldManifold worldManifold;
+		contact->GetWorldManifold(&worldManifold);
+
+		for (int i = 0; i < numPoints; i++)
+		{
+			b2Vec2 pointVel =
+				otherBody->GetLinearVelocityFromWorldPoint(worldManifold.points[i]);
+
+			
+			
+			if (pointVel.x > 0)
+				return;
+		}
+
+		contact->SetEnabled(false);
+		
+		if (!contact->IsEnabled())
+		{
+			
+			return;
+		}
+		
+	}
+
+	//contact->SetEnabled(true);
+
+
 	// Call the OnCollision listener function to bodies A and B, passing as inputs our custom PhysBody classes
 	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
@@ -572,6 +523,18 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 		physA->listener->OnCollision(physA, physB);
 	if(physB && physB->listener != NULL)
 		physB->listener->OnCollision(physB, physA);
+
+
+	
+
+	
+}
+
+void ModulePhysics::EndContact(b2Contact* contact)
+{
+	//reset the default state of the contact in case it comes back for more
+	//contact->SetEnabled(true);
+	
 }
 
 

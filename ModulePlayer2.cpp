@@ -73,6 +73,19 @@ update_status ModulePlayer2::Update()
 
 		pbody->body->ApplyTorque(-340000, true);
 	}
+
+	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	{
+		//LOG("     %f", pbody->body->GetAngle() * RADTODEG);
+		if (pbody->body->GetAngle() * RADTODEG < -45)
+		{
+			//pbody->body->ApplyTorque(290000, true);
+			pbody->body->SetAngularVelocity(-5);
+		}
+	}
+
+	
+
 	App->renderer->Blit(flipper, METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 40, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10, NULL, 1.0f, pbody->GetRotation());
 	
 

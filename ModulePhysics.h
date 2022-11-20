@@ -61,12 +61,13 @@ public:
 
 	// Create basic physics objects
 	PhysBody* CreateCircle(int x, int y, int radius, float Restitution, bodyType type);
-	PhysBody* CreateRectangle(int x, int y, int width, int height, float Restitution, bodyType type,float Density);
+	PhysBody* CreateRectangle(int x, int y, float width, int height, float Restitution, bodyType type,float Density);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height);
 	PhysBody* CreateChain(int x, int y, int* points, int size, float Restitution, bodyType type);
 
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
+	void EndContact(b2Contact* contact);
 
 	
 

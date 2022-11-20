@@ -36,6 +36,7 @@ bool ModulePlayer::Start()
 
 	revoluteJointDef.enableLimit = true;
 	revoluteJointDef.lowerAngle = -55 * DEGTORAD;
+	int lowangle = -45;
 	revoluteJointDef.upperAngle = 5 * DEGTORAD;
 
 	
@@ -73,6 +74,21 @@ update_status ModulePlayer::Update()
 		
 
 		pbody->body->ApplyTorque(290000, true);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+	{
+		// Enable raycast mode
+
+		//if (pbody->body->GetAngle() - DEGTORAD * angularSpeedLeft < (-DEGTORAD) * maxAngleLeft)
+		//LOG("     %f", pbody->body->GetAngle() * RADTODEG);
+		if (pbody->body->GetAngle() * RADTODEG > 45)
+		{
+			//pbody->body->ApplyTorque(290000, true);
+			pbody->body->SetAngularVelocity(5);
+		}
+
+
+		
 	}
 
 	

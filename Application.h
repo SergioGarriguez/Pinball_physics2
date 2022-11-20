@@ -17,6 +17,8 @@ class ModuleBoss;
 class ModuleSceneIntro;
 class ModulePhysics;
 class ModuleFonts;
+class ModuleSensor;
+class ModuleMouth;
 
 class Application
 {
@@ -31,6 +33,8 @@ public:
 	ModulePiston* piston;
 	ModuleBumper* bumper;
 	ModuleBoss* boss;
+	ModuleSensor* sensor;
+	ModuleMouth* mouth;
 	ModuleSceneIntro* scene_intro;
 	ModulePhysics* physics;
 	ModuleFonts* fonts;

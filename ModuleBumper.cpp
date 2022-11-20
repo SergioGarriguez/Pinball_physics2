@@ -108,7 +108,7 @@ update_status ModuleBumper::Update()
 	App->renderer->Blit(heart, METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 30, &rect, 1.0f, pbody->GetRotation());
 	App->renderer->Blit(heart, METERS_TO_PIXELS(pbody2->body->GetTransform().p.x) - 30, METERS_TO_PIXELS(pbody2->body->GetTransform().p.y) - 30, &rect2, 1.0f, pbody2->GetRotation());
 	
-	//LOG("%d", currentAnimation->GetCurrentFrame());
+	
 	currentAnimation->Update();
 	currentAnimation2->Update();
 
@@ -140,8 +140,7 @@ update_status ModuleBumper::Update()
 
 void ModuleBumper::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	// Play Audio FX on every collision, regardless of who is colliding
-	//if (bodyB->body->GetType() == b2_staticBody)
+	
 
 	if (bodyB->body->IsBullet())
 	{
@@ -175,14 +174,7 @@ void ModuleBumper::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 		}
 	}
 	
-	//LOG("prev score: %d", prev_score);
-	//LOG("max score: %d", max_score);
-	//LOG("now score: %d", score);
-
 	
-	
-
-	// Do something else. You can also check which bodies are colliding (sensor? ball? player?)
 }
 
 void ModuleBumper::SetScore()
@@ -203,9 +195,7 @@ void ModuleBumper::SetScore()
 void ModuleBumper::AddScore(int amount)
 {
 	score += amount;
-	//LOG("prev score: %d", prev_score);
-	//LOG("max score: %d", max_score);
-	//LOG("now score: %d", score);
+	
 }
 
 int ModuleBumper::GetScore()

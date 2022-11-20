@@ -74,6 +74,12 @@
     <ClInclude Include="ModuleFonts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleMouth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSensor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -122,6 +128,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ModuleFonts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleMouth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
