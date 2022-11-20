@@ -42,11 +42,14 @@ ModuleBumper::~ModuleBumper()
 // Load assets
 bool ModuleBumper::Start()
 {
-	LOG("Loading player2");
+	LOG("Loading bumper");
 
 	pbody = App->physics->CreateCircle(195, 500, 30, 1.2, STATIC);
 
 	pbody->body->SetGravityScale(1);
+
+	sfx = App->audio->LoadFx("pinball/meat2.wav");
+	sfx2 = App->audio->LoadFx("pinball/combo.wav");
 
 	heart = App->textures->Load("pinball/heart2.png");
 	currentAnimation = &idleAnim;
@@ -142,6 +145,8 @@ void ModuleBumper::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	if (bodyB->body->IsBullet())
 	{
+
+		App->audio->PlayFx(sfx);
 		if (bodyA->body->GetGravityScale() == 1)
 		{
 			bumper1 = true;
@@ -163,15 +168,16 @@ void ModuleBumper::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 			LOG("combo");
 			bumper1 = false;
 			bumper2 = false;
+			App->audio->PlayFx(sfx2);
 
 			currentAnimation = &idleAnim;
 			currentAnimation2 = &idleAnim2;
 		}
 	}
 	
-	LOG("prev score: %d", prev_score);
-	LOG("max score: %d", max_score);
-	LOG("now score: %d", score);
+	//LOG("prev score: %d", prev_score);
+	//LOG("max score: %d", max_score);
+	//LOG("now score: %d", score);
 
 	
 	
@@ -197,9 +203,9 @@ void ModuleBumper::SetScore()
 void ModuleBumper::AddScore(int amount)
 {
 	score += amount;
-	LOG("prev score: %d", prev_score);
-	LOG("max score: %d", max_score);
-	LOG("now score: %d", score);
+	//LOG("prev score: %d", prev_score);
+	//LOG("max score: %d", max_score);
+	//LOG("now score: %d", score);
 }
 
 int ModuleBumper::GetScore()

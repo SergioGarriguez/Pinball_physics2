@@ -51,10 +51,10 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 	idleAnim.PushBack({ 160, 160, 40, 40 });
 	
 
-	//idleAnim.PushBack({ 0, 200, 40, 40 });
-	//idleAnim.PushBack({ 40, 200, 40, 40 });
-	//idleAnim.PushBack({ 80, 200, 40, 40 });
-	//idleAnim.PushBack({ 120, 200, 40, 40 });
+	idleAnim.PushBack({ 0, 200, 40, 40 });
+	idleAnim.PushBack({ 40, 200, 40, 40 });
+	idleAnim.PushBack({ 80, 200, 40, 40 });
+	idleAnim.PushBack({ 120, 200, 40, 40 });
 	//idleAnim.PushBack({ 160, 200, 40, 40 });
 
 	idleAnim.speed = 0.2f;
@@ -79,7 +79,7 @@ bool ModuleSceneIntro::Start()
 	currentAnimation = &idleAnim;
 
 	
-	bonus_fx = App->audio->LoadFx("pinball/meat2.wav");
+	bonus_fx = App->audio->LoadFx("pinball/blood.wav");
 
 	int wall[104] = {
 			324, 867,
@@ -178,10 +178,12 @@ update_status ModuleSceneIntro::Update()
 		circles.getLast()->data->body->SetBullet(true);
 		lives = 3;
 
-		LOG("%d lives", lives);
+		//LOG("%d lives", lives);
 		
 		
 	}
+
+
 	if (App->input->GetKey(SDL_SCANCODE_6) == KEY_REPEAT)
 	{
 		
@@ -206,7 +208,7 @@ update_status ModuleSceneIntro::Update()
 		circles.getLast()->data->body->SetBullet(true);
 		lives = 3;
 	}
-	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_5) == KEY_DOWN && Restitution < 1.5)
 	{
 		Restitution += 0.1;
 		LOG("%f ", Restitution);
@@ -228,12 +230,12 @@ update_status ModuleSceneIntro::Update()
 			circles.getLast()->data->body->SetLinearVelocity(b2Vec2(0, 0));
 
 			lives--;
-			LOG("%d lives", lives);
+			//LOG("%d lives", lives);
 
 			if (lives <= 0)
 			{
 				App->bumper->SetScore();
-				LOG("%d lives, you lost", lives);
+				//LOG("%d lives, you lost", lives);
 				lives = 3;
 				
 			}
@@ -247,16 +249,17 @@ update_status ModuleSceneIntro::Update()
 	{
 		if (circles.getLast() != NULL)
 		{
-			circles.getLast()->data->body->ApplyForceToCenter(b2Vec2(0, -200), true);
+
+			if (METERS_TO_PIXELS(circles.getLast()->data->body->GetTransform().p.y) > 750  && METERS_TO_PIXELS(circles.getLast()->data->body->GetTransform().p.x) < 200)
+			{
+				circles.getLast()->data->body->ApplyForceToCenter(b2Vec2(0, -20), true);
+			}
+			
 		}
 		
 		
 	}
-	if (App->input->GetKey(SDL_SCANCODE_S))
-	{
-		//circles.getLast()->data->body->ApplyForceToCenter(b2Vec2(0, -200), true);
-		//circles.getLast()->data->body->
-	}
+	
 
 	
 	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
@@ -307,6 +310,14 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(circle, x, y, &rect, 1.0f, c->data->GetRotation());
 		
 		
+		auto vel = c->data->body->GetLinearVelocity();
+		float velmod = vel.Length();
+		
+		if (velmod > 200)
+		{
+			c->data->body->SetLinearVelocity(b2Vec2(c->data->body->GetLinearVelocity().x / 8, c->data->body->GetLinearVelocity().y / 8));
+		}
+		
 		
 
 		c = c->next;
@@ -346,7 +357,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	//if (bodyB->body->GetType() == b2_staticBody)
 
 
-	//App->audio->PlayFx(bonus_fx);
+	App->audio->PlayFx(bonus_fx);
 
 	// Do something else. You can also check which bodies are colliding (sensor? ball? player?)
 }
@@ -372,4 +383,9 @@ float ModuleSceneIntro::GetBallPosY()
 int ModuleSceneIntro::GetLives()
 {
 	return lives;
+}
+
+void ModuleSceneIntro::PlusLives()
+{
+	lives++;
 }

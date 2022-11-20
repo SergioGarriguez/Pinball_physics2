@@ -40,6 +40,9 @@ public:
 	bool BossBeaten = false; 
 	bool destroy = false;
 
+
+	uint sfx;
+	uint sfx2;
 	
 
 	b2PrismaticJoint* prismatic_joint;

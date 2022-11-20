@@ -50,9 +50,10 @@ ModuleBoss::~ModuleBoss()
 // Load assets
 bool ModuleBoss::Start()
 {
-	LOG("Loading player2");
+	LOG("Loading boss");
 
-	
+	sfx = App->audio->LoadFx("pinball/pin.wav");
+	sfx2 = App->audio->LoadFx("pinball/plasma.wav");
 
 	saucer = App->textures->Load("pinball/saucer.png");
 	explosion = App->textures->Load("pinball/explosion.png");
@@ -215,8 +216,10 @@ update_status ModuleBoss::Update()
 				
 				
 			}
+			App->audio->PlayFx(sfx2);
 			pbody->~PhysBody();
 			App->bumper->AddScore(3000);
+			App->scene_intro->PlusLives();
 			BossBeaten = true;
 
 			
@@ -264,6 +267,7 @@ void ModuleBoss::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB->body->IsBullet())
 	{
 		hits_taken++;
+		App->audio->PlayFx(sfx);
 	}
 
 	

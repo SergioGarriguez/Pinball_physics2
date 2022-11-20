@@ -46,6 +46,9 @@ public:
 	Animation idleAnim2;
 	Animation beatingAnim2;
 
+	uint sfx;
+	uint sfx2;
+
 	int scoreFont = -1;
 	char scoreText[10] = { "\0" };
 	

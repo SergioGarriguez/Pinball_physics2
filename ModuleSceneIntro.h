@@ -23,6 +23,7 @@ public:
 	float GetBallPosX();
 	float GetBallPosY();
 	int GetLives();
+	void PlusLives();
 
 public:
 
@@ -49,6 +50,7 @@ public:
 
 	// FX
 	uint bonus_fx;
+	
 
 	// Raycast
 	p2Point<int> ray;
